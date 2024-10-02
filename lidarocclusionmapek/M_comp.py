@@ -122,8 +122,9 @@ class Monitor(TriggeredNode):
 
         # Set the monitor status to mark an anomaly if the there is any
         # occlusion outside of the ignored region
+        #                   lidar_mask_reduced.approx_eq(lidar_mask_old)
         status = (monitorStatus.NORMAL
-                  if lidar_mask_reduced.approx_eq(lidar_mask_old)
+                  if lidar_mask_reduced._values.all()
                   else monitorStatus.ANOMALY)
         self.logger.log(f"[Monitor] status was {status}")
 
