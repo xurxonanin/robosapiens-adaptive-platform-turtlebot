@@ -1,5 +1,4 @@
 from rpio.transformations.transformations import swc2code_py,message2code_py
-from HelloWorld.Design.HelloWorld_AADLIL import *
 from rpio.parsers.parsers import AADL_parser
 
 #-------------------------------------------------------------------------------------------------------
