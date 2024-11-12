@@ -8,7 +8,8 @@ from ship_maneuvering_model import ShipModel
 import HydroPara_PI3_alternative1 as HydroPara_PI3
 import matplotlib.animation as animation
 from matplotlib.patches import Rectangle
-
+import matplotlib
+matplotlib.use('TkAgg')
 
 import json
 
