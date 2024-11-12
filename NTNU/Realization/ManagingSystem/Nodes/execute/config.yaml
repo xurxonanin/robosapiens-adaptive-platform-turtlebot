@@ -1,0 +1,68 @@
+logger:
+  endpoints:
+    - endpoint:
+        type: "logging"
+        name: "RemoteLog"
+        class: "LogMessage"
+        topic: "/RemoteLog"
+        QoS: 10
+
+knowledgeIn:
+  properties:
+    - property:
+        type: "data"
+        name: "plan"
+        class: "plan"
+        topic: "/plan"
+        QoS: 10
+
+knowledgeOut:
+  properties:
+    - property:
+        type: "data"
+        name: "pathEstimate"
+        class: "pathEstimate"
+        topic: "/pathEstimate"
+        QoS: 10
+
+eventIn:
+  properties:
+    - property:
+        type: "event"
+        name: "plan"
+        class: "-"
+        topic: "/plan"
+        QoS: 10
+
+eventOut:
+  properties:
+    - property:
+        type: "event"
+        name: "pathEstimate"
+        class: "-"
+        topic: "/pathEstimate"
+        QoS: 10
+
+
+mqtt_broker: "localhost"
+mqtt_port: 1883
+
+mqtt_subscribe_topics:
+  - "/Scan"
+
+mqtt_publish_topics:
+  - "monitor/event"
+
+redis_host: "localhost"
+redis_port: 6379
+
+logging:
+  level: "DEBUG"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "MAPE_test.log"
+
+knowledge_config:
+  storage_type: "global"
+  redis_host: "localhost"
+  redis_port: 6379
+  redis_db: 0
