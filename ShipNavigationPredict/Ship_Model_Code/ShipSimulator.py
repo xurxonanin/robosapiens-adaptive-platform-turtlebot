@@ -10,6 +10,9 @@ import matplotlib.animation as animation
 from matplotlib.patches import Rectangle
 
 
+import json
+
+
 
 #RA probe and effector 
 from rpio.clientLibraries.rpclpy.node import Node
@@ -138,7 +141,7 @@ class ShipSim:
                 shifted_data = _data.shift(-frame_num)
                 self.eta, self.nu = self.predict_trajectory(shifted_data)
                 ax.plot(self.eta[:, 0], self.eta[:, 1], 'r--', label='Predicted Trajectory')
-            self.probe.publish_event(event_key='/trajectory')
+                self.probe.publish_event(event_key='/trajectory', message= json.dumps({'path': [x.tolist(),y.tolist()], 'predicted_path':(self.eta).tolist()}, indent=4))
             fig.canvas.draw()
             return ship
 
