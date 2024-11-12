@@ -1,0 +1,922 @@
+{
+    "_name": "adaptiveSystem",
+    "_description": "Generated from AADL models",
+    "_verbose": false,
+    "_featureList": [],
+    "_systemList": [
+        {
+            "_name": "managingSystem",
+            "_description": "managing system part",
+            "_verbose": false,
+            "_featureList": [],
+            "_systemList": [],
+            "_processList": [
+                {
+                    "_name": "monitor",
+                    "_description": "monitor component",
+                    "_verbose": false,
+                    "_featureList": [
+                        {
+                            "_name": "weatherConditions",
+                            "_description": "tbd",
+                            "_verbose": false,
+                            "_featureType": "inport",
+                            "_initialValue": 1.0,
+                            "_valueReference": 1,
+                            "_type": "event data",
+                            "_message": {
+                                "_name": "weatherConditions",
+                                "_description": "tbd",
+                                "_verbose": false,
+                                "_featureList": [
+                                    {
+                                        "_name": "windDirection",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureType": "feature",
+                                        "_dataType": "Float_64"
+                                    },
+                                    {
+                                        "_name": "windSpeed",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureType": "feature",
+                                        "_dataType": "Float_64"
+                                    },
+                                    {
+                                        "_name": "windSpeed2",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureType": "feature",
+                                        "_dataType": "Array"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "_name": "shipPose",
+                            "_description": "tbd",
+                            "_verbose": false,
+                            "_featureType": "inport",
+                            "_initialValue": 1.0,
+                            "_valueReference": 1,
+                            "_type": "event data",
+                            "_message": {
+                                "_name": "shipPose",
+                                "_description": "tbd",
+                                "_verbose": false,
+                                "_featureList": [
+                                    {
+                                        "_name": "SurgeSpeed",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureType": "feature",
+                                        "_dataType": "Float_64"
+                                    },
+                                    {
+                                        "_name": "SwaySpeed",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureType": "feature",
+                                        "_dataType": "Float_64"
+                                    },
+                                    {
+                                        "_name": "YawRate",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureType": "feature",
+                                        "_dataType": "Float_64"
+                                    },
+                                    {
+                                        "_name": "RollAngle",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureType": "feature",
+                                        "_dataType": "Float_64"
+                                    },
+                                    {
+                                        "_name": "RollRate",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureType": "feature",
+                                        "_dataType": "Float_64"
+                                    },
+                                    {
+                                        "_name": "Heading",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureType": "feature",
+                                        "_dataType": "Float_64"
+                                    },
+                                    {
+                                        "_name": "x",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureType": "feature",
+                                        "_dataType": "Float_64"
+                                    },
+                                    {
+                                        "_name": "y",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureType": "feature",
+                                        "_dataType": "Float_64"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "_name": "shipAction",
+                            "_description": "tbd",
+                            "_verbose": false,
+                            "_featureType": "inport",
+                            "_initialValue": 1.0,
+                            "_valueReference": 1,
+                            "_type": "event data",
+                            "_message": {
+                                "_name": "shipAction",
+                                "_description": "tbd",
+                                "_verbose": false,
+                                "_featureList": [
+                                    {
+                                        "_name": "RudderAngle",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureType": "feature",
+                                        "_dataType": "Float_64"
+                                    },
+                                    {
+                                        "_name": "rpm",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureType": "feature",
+                                        "_dataType": "Float_32"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "_name": "pathEstimate",
+                            "_description": "tbd",
+                            "_verbose": false,
+                            "_featureType": "outport",
+                            "_initialValue": 1.0,
+                            "_valueReference": 1,
+                            "_type": "event data",
+                            "_message": {
+                                "_name": "predictedPath",
+                                "_description": "tbd",
+                                "_verbose": false,
+                                "_featureList": [
+                                    {
+                                        "_name": "Confidence",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureType": "feature",
+                                        "_dataType": "Float_32"
+                                    },
+                                    {
+                                        "_name": "waypoints",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureType": "feature",
+                                        "_dataType": "String"
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "_threadList": [
+                        {
+                            "_name": "shipPoseEstimation",
+                            "_description": "tbd",
+                            "_verbose": false,
+                            "_featureList": [
+                                {
+                                    "_name": "weatherConditions",
+                                    "_description": "tbd",
+                                    "_verbose": false,
+                                    "_featureType": "inport",
+                                    "_initialValue": 1.0,
+                                    "_valueReference": 1,
+                                    "_type": "event data",
+                                    "_message": {
+                                        "_name": "weatherConditions",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureList": [
+                                            {
+                                                "_name": "windDirection",
+                                                "_description": "tbd",
+                                                "_verbose": false,
+                                                "_featureType": "feature",
+                                                "_dataType": "Float_64"
+                                            },
+                                            {
+                                                "_name": "windSpeed",
+                                                "_description": "tbd",
+                                                "_verbose": false,
+                                                "_featureType": "feature",
+                                                "_dataType": "Float_64"
+                                            },
+                                            {
+                                                "_name": "windSpeed2",
+                                                "_description": "tbd",
+                                                "_verbose": false,
+                                                "_featureType": "feature",
+                                                "_dataType": "Array"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "_name": "shipPose",
+                                    "_description": "tbd",
+                                    "_verbose": false,
+                                    "_featureType": "inport",
+                                    "_initialValue": 1.0,
+                                    "_valueReference": 1,
+                                    "_type": "event data",
+                                    "_message": {
+                                        "_name": "shipPose",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureList": [
+                                            {
+                                                "_name": "SurgeSpeed",
+                                                "_description": "tbd",
+                                                "_verbose": false,
+                                                "_featureType": "feature",
+                                                "_dataType": "Float_64"
+                                            },
+                                            {
+                                                "_name": "SwaySpeed",
+                                                "_description": "tbd",
+                                                "_verbose": false,
+                                                "_featureType": "feature",
+                                                "_dataType": "Float_64"
+                                            },
+                                            {
+                                                "_name": "YawRate",
+                                                "_description": "tbd",
+                                                "_verbose": false,
+                                                "_featureType": "feature",
+                                                "_dataType": "Float_64"
+                                            },
+                                            {
+                                                "_name": "RollAngle",
+                                                "_description": "tbd",
+                                                "_verbose": false,
+                                                "_featureType": "feature",
+                                                "_dataType": "Float_64"
+                                            },
+                                            {
+                                                "_name": "RollRate",
+                                                "_description": "tbd",
+                                                "_verbose": false,
+                                                "_featureType": "feature",
+                                                "_dataType": "Float_64"
+                                            },
+                                            {
+                                                "_name": "Heading",
+                                                "_description": "tbd",
+                                                "_verbose": false,
+                                                "_featureType": "feature",
+                                                "_dataType": "Float_64"
+                                            },
+                                            {
+                                                "_name": "x",
+                                                "_description": "tbd",
+                                                "_verbose": false,
+                                                "_featureType": "feature",
+                                                "_dataType": "Float_64"
+                                            },
+                                            {
+                                                "_name": "y",
+                                                "_description": "tbd",
+                                                "_verbose": false,
+                                                "_featureType": "feature",
+                                                "_dataType": "Float_64"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "_name": "shipAction",
+                                    "_description": "tbd",
+                                    "_verbose": false,
+                                    "_featureType": "inport",
+                                    "_initialValue": 1.0,
+                                    "_valueReference": 1,
+                                    "_type": "event data",
+                                    "_message": {
+                                        "_name": "shipAction",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureList": [
+                                            {
+                                                "_name": "RudderAngle",
+                                                "_description": "tbd",
+                                                "_verbose": false,
+                                                "_featureType": "feature",
+                                                "_dataType": "Float_64"
+                                            },
+                                            {
+                                                "_name": "rpm",
+                                                "_description": "tbd",
+                                                "_verbose": false,
+                                                "_featureType": "feature",
+                                                "_dataType": "Float_32"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "_name": "pathEstimate",
+                                    "_description": "tbd",
+                                    "_verbose": false,
+                                    "_featureType": "outport",
+                                    "_initialValue": 1.0,
+                                    "_valueReference": 1,
+                                    "_type": "event data",
+                                    "_message": {
+                                        "_name": "predictedPath",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureList": [
+                                            {
+                                                "_name": "Confidence",
+                                                "_description": "tbd",
+                                                "_verbose": false,
+                                                "_featureType": "feature",
+                                                "_dataType": "Float_32"
+                                            },
+                                            {
+                                                "_name": "waypoints",
+                                                "_description": "tbd",
+                                                "_verbose": false,
+                                                "_featureType": "feature",
+                                                "_dataType": "String"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ],
+                            "_eventTrigger": null
+                        }
+                    ]
+                },
+                {
+                    "_name": "analysis",
+                    "_description": "analysis component",
+                    "_verbose": false,
+                    "_featureList": [
+                        {
+                            "_name": "pathEstimate",
+                            "_description": "tbd",
+                            "_verbose": false,
+                            "_featureType": "inport",
+                            "_initialValue": 1.0,
+                            "_valueReference": 1,
+                            "_type": "event data",
+                            "_message": {
+                                "_name": "predictedPath",
+                                "_description": "tbd",
+                                "_verbose": false,
+                                "_featureList": [
+                                    {
+                                        "_name": "Confidence",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureType": "feature",
+                                        "_dataType": "Float_32"
+                                    },
+                                    {
+                                        "_name": "waypoints",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureType": "feature",
+                                        "_dataType": "String"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "_name": "pathAnomaly",
+                            "_description": "tbd",
+                            "_verbose": false,
+                            "_featureType": "outport",
+                            "_initialValue": 1.0,
+                            "_valueReference": 1,
+                            "_type": "event data",
+                            "_message": null
+                        }
+                    ],
+                    "_threadList": []
+                },
+                {
+                    "_name": "plan",
+                    "_description": "plan component",
+                    "_verbose": false,
+                    "_featureList": [
+                        {
+                            "_name": "plan",
+                            "_description": "tbd",
+                            "_verbose": false,
+                            "_featureType": "outport",
+                            "_initialValue": 1.0,
+                            "_valueReference": 1,
+                            "_type": "event data",
+                            "_message": {
+                                "_name": "predictedPath",
+                                "_description": "tbd",
+                                "_verbose": false,
+                                "_featureList": [
+                                    {
+                                        "_name": "Confidence",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureType": "feature",
+                                        "_dataType": "Float_32"
+                                    },
+                                    {
+                                        "_name": "waypoints",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureType": "feature",
+                                        "_dataType": "String"
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "_threadList": [
+                        {
+                            "_name": "planner",
+                            "_description": "tbd",
+                            "_verbose": false,
+                            "_featureList": [
+                                {
+                                    "_name": "plan",
+                                    "_description": "tbd",
+                                    "_verbose": false,
+                                    "_featureType": "outport",
+                                    "_initialValue": 1.0,
+                                    "_valueReference": 1,
+                                    "_type": "event data",
+                                    "_message": {
+                                        "_name": "predictedPath",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureList": [
+                                            {
+                                                "_name": "Confidence",
+                                                "_description": "tbd",
+                                                "_verbose": false,
+                                                "_featureType": "feature",
+                                                "_dataType": "Float_32"
+                                            },
+                                            {
+                                                "_name": "waypoints",
+                                                "_description": "tbd",
+                                                "_verbose": false,
+                                                "_featureType": "feature",
+                                                "_dataType": "String"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ],
+                            "_eventTrigger": null
+                        }
+                    ]
+                },
+                {
+                    "_name": "legitimate",
+                    "_description": "legitimate component",
+                    "_verbose": false,
+                    "_featureList": [
+                        {
+                            "_name": "plan",
+                            "_description": "tbd",
+                            "_verbose": false,
+                            "_featureType": "inport",
+                            "_initialValue": 1.0,
+                            "_valueReference": 1,
+                            "_type": "event data",
+                            "_message": {
+                                "_name": "predictedPath",
+                                "_description": "tbd",
+                                "_verbose": false,
+                                "_featureList": [
+                                    {
+                                        "_name": "Confidence",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureType": "feature",
+                                        "_dataType": "Float_32"
+                                    },
+                                    {
+                                        "_name": "waypoints",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureType": "feature",
+                                        "_dataType": "String"
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "_threadList": [
+                        {
+                            "_name": "planner",
+                            "_description": "tbd",
+                            "_verbose": false,
+                            "_featureList": [],
+                            "_eventTrigger": null
+                        }
+                    ]
+                },
+                {
+                    "_name": "execute",
+                    "_description": "execute component",
+                    "_verbose": false,
+                    "_featureList": [
+                        {
+                            "_name": "plan",
+                            "_description": "tbd",
+                            "_verbose": false,
+                            "_featureType": "inport",
+                            "_initialValue": 1.0,
+                            "_valueReference": 1,
+                            "_type": "event data",
+                            "_message": {
+                                "_name": "predictedPath",
+                                "_description": "tbd",
+                                "_verbose": false,
+                                "_featureList": [
+                                    {
+                                        "_name": "Confidence",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureType": "feature",
+                                        "_dataType": "Float_32"
+                                    },
+                                    {
+                                        "_name": "waypoints",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureType": "feature",
+                                        "_dataType": "String"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "_name": "pathEstimate",
+                            "_description": "tbd",
+                            "_verbose": false,
+                            "_featureType": "outport",
+                            "_initialValue": 1.0,
+                            "_valueReference": 1,
+                            "_type": "event data",
+                            "_message": {
+                                "_name": "predictedPath",
+                                "_description": "tbd",
+                                "_verbose": false,
+                                "_featureList": [
+                                    {
+                                        "_name": "Confidence",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureType": "feature",
+                                        "_dataType": "Float_32"
+                                    },
+                                    {
+                                        "_name": "waypoints",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureType": "feature",
+                                        "_dataType": "String"
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "_threadList": [
+                        {
+                            "_name": "executer",
+                            "_description": "tbd",
+                            "_verbose": false,
+                            "_featureList": [
+                                {
+                                    "_name": "plan",
+                                    "_description": "tbd",
+                                    "_verbose": false,
+                                    "_featureType": "inport",
+                                    "_initialValue": 1.0,
+                                    "_valueReference": 1,
+                                    "_type": "event data",
+                                    "_message": {
+                                        "_name": "predictedPath",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureList": [
+                                            {
+                                                "_name": "Confidence",
+                                                "_description": "tbd",
+                                                "_verbose": false,
+                                                "_featureType": "feature",
+                                                "_dataType": "Float_32"
+                                            },
+                                            {
+                                                "_name": "waypoints",
+                                                "_description": "tbd",
+                                                "_verbose": false,
+                                                "_featureType": "feature",
+                                                "_dataType": "String"
+                                            }
+                                        ]
+                                    }
+                                },
+                                {
+                                    "_name": "pathEstimate",
+                                    "_description": "tbd",
+                                    "_verbose": false,
+                                    "_featureType": "outport",
+                                    "_initialValue": 1.0,
+                                    "_valueReference": 1,
+                                    "_type": "event data",
+                                    "_message": {
+                                        "_name": "predictedPath",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureList": [
+                                            {
+                                                "_name": "Confidence",
+                                                "_description": "tbd",
+                                                "_verbose": false,
+                                                "_featureType": "feature",
+                                                "_dataType": "Float_32"
+                                            },
+                                            {
+                                                "_name": "waypoints",
+                                                "_description": "tbd",
+                                                "_verbose": false,
+                                                "_featureType": "feature",
+                                                "_dataType": "String"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ],
+                            "_eventTrigger": null
+                        }
+                    ]
+                }
+            ],
+            "_messageList": []
+        },
+        {
+            "_name": "managedSystem",
+            "_description": "managed system part",
+            "_verbose": false,
+            "_featureList": [],
+            "_systemList": [],
+            "_processList": [
+                {
+                    "_name": "controlSoftware",
+                    "_description": "controlSoftware component",
+                    "_verbose": false,
+                    "_featureList": [
+                        {
+                            "_name": "dataIn",
+                            "_description": "tbd",
+                            "_verbose": false,
+                            "_featureType": "inport",
+                            "_initialValue": 1.0,
+                            "_valueReference": 1,
+                            "_type": "event data",
+                            "_message": {
+                                "_name": "predictedPath",
+                                "_description": "tbd",
+                                "_verbose": false,
+                                "_featureList": [
+                                    {
+                                        "_name": "Confidence",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureType": "feature",
+                                        "_dataType": "Float_32"
+                                    },
+                                    {
+                                        "_name": "waypoints",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureType": "feature",
+                                        "_dataType": "String"
+                                    }
+                                ]
+                            }
+                        }
+                    ],
+                    "_threadList": [
+                        {
+                            "_name": "controller",
+                            "_description": "tbd",
+                            "_verbose": false,
+                            "_featureList": [
+                                {
+                                    "_name": "dataIn",
+                                    "_description": "tbd",
+                                    "_verbose": false,
+                                    "_featureType": "inport",
+                                    "_initialValue": 1.0,
+                                    "_valueReference": 1,
+                                    "_type": "event data",
+                                    "_message": {
+                                        "_name": "predictedPath",
+                                        "_description": "tbd",
+                                        "_verbose": false,
+                                        "_featureList": [
+                                            {
+                                                "_name": "Confidence",
+                                                "_description": "tbd",
+                                                "_verbose": false,
+                                                "_featureType": "feature",
+                                                "_dataType": "Float_32"
+                                            },
+                                            {
+                                                "_name": "waypoints",
+                                                "_description": "tbd",
+                                                "_verbose": false,
+                                                "_featureType": "feature",
+                                                "_dataType": "String"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ],
+                            "_eventTrigger": null
+                        }
+                    ]
+                }
+            ],
+            "_messageList": []
+        }
+    ],
+    "_processList": [],
+    "_messageList": [
+        {
+            "_name": "ObjectArray",
+            "_description": "tbd",
+            "_verbose": false,
+            "_featureList": []
+        },
+        {
+            "_name": "FloatArray",
+            "_description": "tbd",
+            "_verbose": false,
+            "_featureList": []
+        },
+        {
+            "_name": "Array",
+            "_description": "tbd",
+            "_verbose": false,
+            "_featureList": []
+        },
+        {
+            "_name": "weatherConditions",
+            "_description": "tbd",
+            "_verbose": false,
+            "_featureList": [
+                {
+                    "_name": "windDirection",
+                    "_description": "tbd",
+                    "_verbose": false,
+                    "_featureType": "feature",
+                    "_dataType": "Float_64"
+                },
+                {
+                    "_name": "windSpeed",
+                    "_description": "tbd",
+                    "_verbose": false,
+                    "_featureType": "feature",
+                    "_dataType": "Float_64"
+                },
+                {
+                    "_name": "windSpeed2",
+                    "_description": "tbd",
+                    "_verbose": false,
+                    "_featureType": "feature",
+                    "_dataType": "Array"
+                }
+            ]
+        },
+        {
+            "_name": "shipPose",
+            "_description": "tbd",
+            "_verbose": false,
+            "_featureList": [
+                {
+                    "_name": "SurgeSpeed",
+                    "_description": "tbd",
+                    "_verbose": false,
+                    "_featureType": "feature",
+                    "_dataType": "Float_64"
+                },
+                {
+                    "_name": "SwaySpeed",
+                    "_description": "tbd",
+                    "_verbose": false,
+                    "_featureType": "feature",
+                    "_dataType": "Float_64"
+                },
+                {
+                    "_name": "YawRate",
+                    "_description": "tbd",
+                    "_verbose": false,
+                    "_featureType": "feature",
+                    "_dataType": "Float_64"
+                },
+                {
+                    "_name": "RollAngle",
+                    "_description": "tbd",
+                    "_verbose": false,
+                    "_featureType": "feature",
+                    "_dataType": "Float_64"
+                },
+                {
+                    "_name": "RollRate",
+                    "_description": "tbd",
+                    "_verbose": false,
+                    "_featureType": "feature",
+                    "_dataType": "Float_64"
+                },
+                {
+                    "_name": "Heading",
+                    "_description": "tbd",
+                    "_verbose": false,
+                    "_featureType": "feature",
+                    "_dataType": "Float_64"
+                },
+                {
+                    "_name": "x",
+                    "_description": "tbd",
+                    "_verbose": false,
+                    "_featureType": "feature",
+                    "_dataType": "Float_64"
+                },
+                {
+                    "_name": "y",
+                    "_description": "tbd",
+                    "_verbose": false,
+                    "_featureType": "feature",
+                    "_dataType": "Float_64"
+                }
+            ]
+        },
+        {
+            "_name": "shipAction",
+            "_description": "tbd",
+            "_verbose": false,
+            "_featureList": [
+                {
+                    "_name": "RudderAngle",
+                    "_description": "tbd",
+                    "_verbose": false,
+                    "_featureType": "feature",
+                    "_dataType": "Float_64"
+                },
+                {
+                    "_name": "rpm",
+                    "_description": "tbd",
+                    "_verbose": false,
+                    "_featureType": "feature",
+                    "_dataType": "Float_32"
+                }
+            ]
+        },
+        {
+            "_name": "predictedPath",
+            "_description": "tbd",
+            "_verbose": false,
+            "_featureList": [
+                {
+                    "_name": "Confidence",
+                    "_description": "tbd",
+                    "_verbose": false,
+                    "_featureType": "feature",
+                    "_dataType": "Float_32"
+                },
+                {
+                    "_name": "waypoints",
+                    "_description": "tbd",
+                    "_verbose": false,
+                    "_featureType": "feature",
+                    "_dataType": "String"
+                }
+            ]
+        }
+    ]
+}
