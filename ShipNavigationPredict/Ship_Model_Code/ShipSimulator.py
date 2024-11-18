@@ -58,7 +58,6 @@ class Effector(Node):
     def register_callbacks(self):
         return super().register_event_callback(event_key="/model", callback= self.effector)
 
-
 class ShipSim:
     def __init__(self, root):
         self.model = ShipModel()
@@ -146,7 +145,7 @@ class ShipSim:
             fig.canvas.draw()
             return ship
 
-        ani = animation.FuncAnimation(fig, update, frames=len(x), interval=200, blit=False)
+        ani = animation.FuncAnimation(fig, update, frames=len(x), interval=400, blit=False)
 
         # Embed the animation in the tkinter window
         for widget in self.frame.winfo_children():

@@ -1,7 +1,7 @@
-from HelloWorld.Realization.ManagingSystem.Nodes.Monitor.Monitor import Monitor
-from HelloWorld.Realization.ManagingSystem.Nodes.Analysis.Analysis import Analysis
-from HelloWorld.Realization.ManagingSystem.Nodes.Plan.Plan import Plan
-from HelloWorld.Realization.ManagingSystem.Nodes.Execute.Execute import Execute
+from Realization.ManagingSystem.Nodes.Monitor.Monitor import Monitor
+from Realization.ManagingSystem.Nodes.Analysis.Analysis import Analysis
+from Realization.ManagingSystem.Nodes.Plan.Plan import Plan
+from Realization.ManagingSystem.Nodes.Execute.Execute import Execute
 import time 
 
 

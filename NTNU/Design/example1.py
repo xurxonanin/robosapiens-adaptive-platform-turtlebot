@@ -15,12 +15,10 @@ def example():
     SurgeSpeed = data(name="SurgeSpeed",dataType="Float_64")
     SwaySpeed = data(name="SwaySpeed",dataType="Float_64")
     YawRate = data(name="YawRate",dataType="Float_64")
-    RollAngle = data(name="RollAngle",dataType="Float_64")
-    RollRate = data(name="RollRate",dataType="Float_64")
     Heading = data(name="Heading",dataType="Float_64")
     x = data(name="x",dataType="Float_64")
     y = data(name="y",dataType="Float_64")
-    shipPose = message(name="shipPose",featureList=[SurgeSpeed,SwaySpeed,YawRate,RollAngle,RollRate,Heading,x,y])
+    shipPose = message(name="shipPose",featureList=[SurgeSpeed,SwaySpeed,YawRate,Heading,x,y])
 
     # shipAction message
     RudderAngle = data(name="RudderAngle",dataType="Float_64")
