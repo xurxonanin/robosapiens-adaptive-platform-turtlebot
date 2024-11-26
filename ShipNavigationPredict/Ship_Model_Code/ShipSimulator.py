@@ -15,48 +15,48 @@ import json
 
 
 
-#RA probe and effector 
-from rpio.clientLibraries.rpclpy.node import Node
-import time 
-class Probe(Node):
-    def __init__(self, config='config.yaml',verbose=True):
-        super().__init__(config=config,verbose=verbose)
+# #RA probe and effector 
+# from rpio.clientLibraries.rpclpy.node import Node
+# import time 
+# class Probe(Node):
+#     def __init__(self, config='config.yaml',verbose=True):
+#         super().__init__(config=config,verbose=verbose)
 
-        self._name = "probe"
-        self.logger.info("Probe instantiated")
-        self.plant = True
+#         self._name = "probe"
+#         self.logger.info("Probe instantiated")
+#         self.plant = True
 
-        #<!-- cc_init START--!>
-        # user includes here
-        #<!-- cc_init END--!>
-    def effector(self, msg):
-        self.plant  = False
+#         #<!-- cc_init START--!>
+#         # user includes here
+#         #<!-- cc_init END--!>
+#     def effector(self, msg):
+#         self.plant  = False
         
 
 
-    def register_callbacks(self):
-        return super().register_event_callback(event_key="/model", callback= self.effector)
+#     def register_callbacks(self):
+#         return super().register_event_callback(event_key="/model", callback= self.effector)
         
 
-class Effector(Node):
-    def __init__(self, config='config.yaml',verbose=True, plant = True):
-        super().__init__(config=config,verbose=verbose)
+# class Effector(Node):
+#     def __init__(self, config='config.yaml',verbose=True, plant = True):
+#         super().__init__(config=config,verbose=verbose)
 
-        self._name = "effector"
-        self.logger.info("effector instantiated")
-        self.plant  = plant 
+#         self._name = "effector"
+#         self.logger.info("effector instantiated")
+#         self.plant  = plant 
 
 
-        #<!-- cc_init START--!>
-        # user includes here
-        #<!-- cc_init END--!>
-    def effector(self, msg):
-        self.plant  = False
+#         #<!-- cc_init START--!>
+#         # user includes here
+#         #<!-- cc_init END--!>
+#     def effector(self, msg):
+#         self.plant  = False
         
 
 
-    def register_callbacks(self):
-        return super().register_event_callback(event_key="/model", callback= self.effector)
+    # def register_callbacks(self):
+    #     return super().register_event_callback(event_key="/model", callback= self.effector)
 
 class ShipSim:
     def __init__(self, root):
@@ -72,8 +72,8 @@ class ShipSim:
         self.nu = np.array
         self.predict = False
         self.file_path = ''
-        self.probe = Probe(config='config.yaml')
-        self.probe.start()
+        # self.probe = Probe(config='config.yaml')
+        # self.probe.start()
 
     def setup_gui(self):
         animate_button = tk.Button(self.root, text="Animate Ship", command=self.animate_file)
@@ -141,11 +141,11 @@ class ShipSim:
                 shifted_data = _data.shift(-frame_num)
                 self.eta, self.nu = self.predict_trajectory(shifted_data)
                 ax.plot(self.eta[:, 0], self.eta[:, 1], 'r--', label='Predicted Trajectory')
-                self.probe.publish_event(event_key='/trajectory', message= json.dumps({'path': [x.tolist(),y.tolist()], 'predicted_path':(self.eta).tolist()}, indent=4))
+                # self.probe.publish_event(event_key='/trajectory', message= json.dumps({'path': [x.tolist(),y.tolist()], 'predicted_path':(self.eta).tolist()}, indent=4))
             fig.canvas.draw()
             return ship
 
-        ani = animation.FuncAnimation(fig, update, frames=len(x), interval=400, blit=False)
+        ani = animation.FuncAnimation(fig, update, frames=len(x), interval=100, blit=False)
 
         # Embed the animation in the tkinter window
         for widget in self.frame.winfo_children():
