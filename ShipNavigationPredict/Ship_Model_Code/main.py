@@ -26,11 +26,14 @@ def main():
         eta, nu = model.predict(HydroPara_PI3, data['Surge Speed'][0], data['Sway Speed'][0], data['Yaw Rate'][0],
                                 data['Heading'][0], data['x'][0], data['y'][0], data['Rudder Angle'],
                                 data['Wind Direction'], data['Wind Speed'])
-        make_plots(data, eta, nu)
-        eta2, nu2 = model.predict(HydroPara_PI3, data['Surge Speed'][0], data['Sway Speed'][0], data['Yaw Rate'][0],
+        eta2, nu2 = model_7.predict(HydroPara_PI3, data['Surge Speed'][0], data['Sway Speed'][0], data['Yaw Rate'][0],
                         data['Heading'][0], data['x'][0], data['y'][0], data['Rudder Angle'],
                         data['Wind Direction'], data['Wind Speed'])
-        make_plots(data, eta, nu)
+        # make_plots()
+        plt.plot(data['x'], data["y"] , label = "true values", color = "blue")
+        plt.plot(eta[:,0], eta[:,1], label = "predicted_M1", color = "green")
+        plt.plot(eta2[:,0], eta2[:,1], label = "predicted_M2", color = "red")
+        plt.show()
 
 
 if __name__ == "__main__":

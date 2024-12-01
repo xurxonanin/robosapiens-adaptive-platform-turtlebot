@@ -67,6 +67,7 @@ class ShipSim:
         self.predicttion_model = random.choice(available_models)
         self.predicttion_new_model = random.choice(available_models)
         self.model = getattr(ship_maneuvering_model, self.predicttion_model)()
+        self.new_model = getattr(ship_maneuvering_model, self.predicttion_new_model)()
         self.root = root
         self.root.title("Ship Trajectory Dashboard")
         self.root.geometry("800x600")
@@ -84,7 +85,7 @@ class ShipSim:
         animate_button = tk.Button(self.root, text="Animate Ship", command=self.animate_file)
         animate_button.pack(side = "left", padx=30, pady=5)
 
-        select_button = tk.Button(self.root, text="Predict", command=self.predict_botton, justify= "left")
+        select_button = tk.Button(self.root, text="New Model", command=self.predict_botton, justify= "left")
         select_button.pack(side = "left", padx=30, pady=5)
 
         anomaly_button = tk.Button(self.root, text="Anomaly Detection", command=self.anomaly_detection)
@@ -93,7 +94,7 @@ class ShipSim:
         accept_model_button = tk.Button(self.root, text="Accept New Model", command=self.accept_new_model)
         accept_model_button.pack(side = "left", padx=30, pady=5)
 
-        generate_model_button = tk.Button(self.root, text="Generate New Model", command=self.generate_new_model)
+        generate_model_button = tk.Button(self.root, text="Decline New Model", command=self.decline_new_model)
         generate_model_button.pack(side = "left", padx=30, pady=5)
 
 
@@ -117,7 +118,7 @@ class ShipSim:
         )
         return eta, nu
     def new_predict_trajectory(self, df):
-        eta, nu = self.model.predict(
+        eta, nu = self.new_model.predict(
             HydroPara_PI3,
             df['Surge Speed'][0],
             df['Sway Speed'][0],
@@ -154,12 +155,13 @@ class ShipSim:
             ship.set_xy([x[frame_num] - ship_width / 2, y[frame_num] - ship_length / 2])
             ship = heading[frame_num]
             # ax.set_title(f"File Path: {self.file_path} degrees")
-            ax.set_title(self.predicttion_model+ "->"+self.predicttion_new_model)
-            ax.plot(x, y, 'g--', label='Trajectory')
+
+            ax.plot(x, y, label='Current Trajectory')
             _data = self.data
             shifted_data = _data.shift(-frame_num)
             self.eta, self.nu = self.predict_trajectory(shifted_data)
-            ax.plot(self.eta[:, 0], self.eta[:, 1], 'r--', label='Predicted Trajectory with model')
+            ax.plot(self.eta[:, 0], self.eta[:, 1], 'r--', label='Currecnt Prediction:'+ self.predicttion_model)
+            
             self.probe.publish_event(event_key='/ship_status', message= json.dumps({'ship_prediction_model':self.predicttion_model, 'Surge Speed':shifted_data['Surge Speed'][0],
             'Sway Speed':shifted_data['Sway Speed'][0],
             'Yaw Rate': shifted_data['Yaw Rate'][0],
@@ -169,10 +171,14 @@ class ShipSim:
             self.probe.publish_event(event_key='/weather_condition', message= json.dumps({'Rudder Angle': shifted_data['Rudder Angle'].tolist(),
             'Wind Direction': shifted_data['Wind Direction'].tolist(),
             'Wind Speed':shifted_data['Wind Speed'].tolist()}))  
+            
             if self.predicttion_model != self.predicttion_new_model:
                 _eta, _nu = self.new_predict_trajectory(shifted_data)
-                ax.plot(_eta[:, 0], _eta[:, 1], 'b--', label='Predicted Trajectory with model')
-       
+                ax.plot(_eta[:, 0], _eta[:, 1], 'g--', label='New Prediction:'+ self.predicttion_new_model)
+                ax.set_title(self.predicttion_model+ "->"+self.predicttion_new_model)
+            else: 
+                ax.set_title(self.predicttion_model)
+            fig.legend(loc = "lower left")
             fig.canvas.draw()
             return ship
 
@@ -209,8 +215,8 @@ class ShipSim:
         self.model = getattr(ship_maneuvering_model, self.predicttion_model)()  
         # messagebox.showinfo("Accept New Model", "Accepting the new model functionality is not yet implemented.")
 
-    def generate_new_model(self):
-        messagebox.showinfo("Generate New Model", "Generating a new model functionality is not yet implemented.")
+    def decline_new_model(self):
+        self.predicttion_new_model = self.predicttion_model
 
     def animate_file(self):
         self.file_path = filedialog.askopenfilename()
