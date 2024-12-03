@@ -11,40 +11,52 @@ knowledgeIn:
   properties:
     - property:
         type: "data"
-        name: "plan"
-        class: "plan"
-        topic: "/plan"
+        name: "isLegit"
+        class: "isLegit"
+        topic: "/isLegit"
+        QoS: 10
+    - property:
+        type: "data"
+        name: "directions"
+        class: "directions"
+        topic: "/directions"
         QoS: 10
 
 knowledgeOut:
   properties:
     - property:
         type: "data"
-        name: "pathEstimate"
-        class: "pathEstimate"
-        topic: "/pathEstimate"
+        name: "spin_config"
+        class: "spin_config"
+        topic: "/spin_config"
         QoS: 10
 
 eventIn:
   properties:
     - property:
         type: "event"
-        name: "plan"
+        name: "new_plan"
         class: "-"
-        topic: "/plan"
+        topic: "/new_plan"
+        QoS: 10
+    - property:
+        type: "event"
+        name: "isLegit"
+        class: "-"
+        topic: "/isLegit"
         QoS: 10
 
 eventOut:
   properties:
     - property:
         type: "event"
-        name: "pathEstimate"
+        name: "spin_config"
         class: "-"
-        topic: "/pathEstimate"
+        topic: "/spin_config"
         QoS: 10
 
 
-mqtt_broker: "localhost"
+mqtt_broker: "192.168.0.117"
 mqtt_port: 1883
 
 mqtt_subscribe_topics:
@@ -53,7 +65,7 @@ mqtt_subscribe_topics:
 mqtt_publish_topics:
   - "monitor/event"
 
-redis_host: "localhost"
+redis_host: "192.168.0.117"
 redis_port: 6379
 
 logging:
@@ -63,6 +75,6 @@ logging:
 
 knowledge_config:
   storage_type: "global"
-  redis_host: "localhost"
+  redis_host: "192.168.0.117"
   redis_port: 6379
   redis_db: 0

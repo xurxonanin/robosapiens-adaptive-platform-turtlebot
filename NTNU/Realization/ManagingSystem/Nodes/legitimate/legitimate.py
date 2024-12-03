@@ -7,8 +7,13 @@
 # * permission of Bert Van Acker
 # **********************************************************************************
 from rpio.clientLibraries.rpclpy.node import Node
-from .messages import *
 import time
+
+try:
+    from .messages import *
+except (ValueError, ImportError):
+    from messages import *
+
 #<!-- cc_include START--!>
 # user includes here
 #<!-- cc_include END--!>
@@ -17,35 +22,23 @@ import time
 # user code here
 #<!-- cc_code END--!>
 
-class legitimate(Node):
+class Legitimate(Node):
 
     def __init__(self, config='config.yaml',verbose=True):
         super().__init__(config=config,verbose=verbose)
 
-        self._name = "legitimate"
-        self.logger.info("legitimate instantiated")
+        self._name = "Legitimate"
+        self.logger.info("Legitimate instantiated")
 
         #<!-- cc_init START--!>
         # user includes here
         #<!-- cc_init END--!>
 
-    # -----------------------------AUTO-GEN SKELETON FOR planner-----------------------------
-    def planner(self,msg):
 
-        #<!-- cc_code_planner START--!>
-
-        # user code here for planner
-
-
-        #<!-- cc_code_planner END--!>
-
-
-    def register_callbacks(self):
 
 def main(args=None):
 
-    node = legitimate(config='config.yaml')
-    node.register_callbacks()
+    node = Legitimate(config='config.yaml')
     node.start()
 
 if __name__ == '__main__':

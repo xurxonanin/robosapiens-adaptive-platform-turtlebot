@@ -7,8 +7,13 @@
 # * permission of Bert Van Acker
 # **********************************************************************************
 from rpio.clientLibraries.rpclpy.node import Node
-from .messages import *
 import time
+
+try:
+    from .messages import *
+except (ValueError, ImportError):
+    from messages import *
+
 #<!-- cc_include START--!>
 # user includes here
 #<!-- cc_include END--!>
@@ -17,13 +22,13 @@ import time
 # user code here
 #<!-- cc_code END--!>
 
-class plan(Node):
+class Plan(Node):
 
     def __init__(self, config='config.yaml',verbose=True):
         super().__init__(config=config,verbose=verbose)
 
-        self._name = "plan"
-        self.logger.info("plan instantiated")
+        self._name = "Plan"
+        self.logger.info("Plan instantiated")
 
         #<!-- cc_init START--!>
         # user includes here
@@ -31,7 +36,8 @@ class plan(Node):
 
     # -----------------------------AUTO-GEN SKELETON FOR planner-----------------------------
     def planner(self,msg):
-        _predictedPath = predictedPath()
+        _NewPlanMessage = NewPlanMessage()
+        _Direction = Direction()
 
         #<!-- cc_code_planner START--!>
 
@@ -42,13 +48,16 @@ class plan(Node):
 
         #<!-- cc_code_planner END--!>
 
-        self.publish_event(event_key='plan')    # LINK <outport> plan
+        _success = self.knowledge.write(cls=_NewPlanMessage)
+        _success = self.knowledge.write(cls=_Direction)
 
     def register_callbacks(self):
+        self.register_event_callback(event_key='anomaly', callback=self.planner)     # LINK <eventTrigger> anomaly
+        self.register_event_callback(event_key='anomaly', callback=self.planner)        # LINK <inport> anomaly
 
 def main(args=None):
 
-    node = plan(config='config.yaml')
+    node = Plan(config='config.yaml')
     node.register_callbacks()
     node.start()
 
