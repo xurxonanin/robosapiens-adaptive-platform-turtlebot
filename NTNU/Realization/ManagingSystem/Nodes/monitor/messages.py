@@ -1,214 +1,94 @@
-class ObjectArray(object):
+class LaserScan(object):
     def __init__(self):
 
-        self.name= "ObjectArray"
+        self.name= "LaserScan"
+        self._ranges= []
+        self._angle_increment= 0.0
 
 
+    @property
+    def ranges(self):
+        """The ranges (read-only)."""
+        return self._ranges
 
-class FloatArray(object):
+    @ranges.setter
+    def ranges(self, cmp):
+        """The ranges (write)."""
+        self._ranges = cmp
+
+    @property
+    def angle_increment(self):
+        """The angle_increment (read-only)."""
+        return self._angle_increment
+
+    @angle_increment.setter
+    def angle_increment(self, cmp):
+        """The angle_increment (write)."""
+        self._angle_increment = cmp
+
+
+class Direction(object):
     def __init__(self):
 
-        self.name= "FloatArray"
+        self.name= "Direction"
+        self._omega= 0.0
+        self._duration= 0.0
 
 
+    @property
+    def omega(self):
+        """The omega (read-only)."""
+        return self._omega
 
-class Array(object):
+    @omega.setter
+    def omega(self, cmp):
+        """The omega (write)."""
+        self._omega = cmp
+
+    @property
+    def duration(self):
+        """The duration (read-only)."""
+        return self._duration
+
+    @duration.setter
+    def duration(self, cmp):
+        """The duration (write)."""
+        self._duration = cmp
+
+
+class AnomalyMessage(object):
     def __init__(self):
 
-        self.name= "Array"
+        self.name= "AnomalyMessage"
+        self._anomaly= None
 
 
+    @property
+    def anomaly(self):
+        """The anomaly (read-only)."""
+        return self._anomaly
 
-class weatherConditions(object):
+    @anomaly.setter
+    def anomaly(self, cmp):
+        """The anomaly (write)."""
+        self._anomaly = cmp
+
+
+class NewPlanMessage(object):
     def __init__(self):
 
-        self.name= "weatherConditions"
-        self._windDirection= 0.0
-        self._windSpeed= 0.0
-        self._windSpeed2= []
+        self.name= "NewPlanMessage"
+        self._NewPlan= None
 
 
     @property
-    def windDirection(self):
-        """The windDirection (read-only)."""
-        return self._windDirection
+    def NewPlan(self):
+        """The NewPlan (read-only)."""
+        return self._NewPlan
 
-    @windDirection.setter
-    def windDirection(self, cmp):
-        """The windDirection (write)."""
-        self._windDirection = cmp
-
-    @property
-    def windSpeed(self):
-        """The windSpeed (read-only)."""
-        return self._windSpeed
-
-    @windSpeed.setter
-    def windSpeed(self, cmp):
-        """The windSpeed (write)."""
-        self._windSpeed = cmp
-
-    @property
-    def windSpeed2(self):
-        """The windSpeed2 (read-only)."""
-        return self._windSpeed2
-
-    @windSpeed2.setter
-    def windSpeed2(self, cmp):
-        """The windSpeed2 (write)."""
-        self._windSpeed2 = cmp
-
-
-class shipPose(object):
-    def __init__(self):
-
-        self.name= "shipPose"
-        self._SurgeSpeed= 0.0
-        self._SwaySpeed= 0.0
-        self._YawRate= 0.0
-        self._RollAngle= 0.0
-        self._RollRate= 0.0
-        self._Heading= 0.0
-        self._x= 0.0
-        self._y= 0.0
-
-
-    @property
-    def SurgeSpeed(self):
-        """The SurgeSpeed (read-only)."""
-        return self._SurgeSpeed
-
-    @SurgeSpeed.setter
-    def SurgeSpeed(self, cmp):
-        """The SurgeSpeed (write)."""
-        self._SurgeSpeed = cmp
-
-    @property
-    def SwaySpeed(self):
-        """The SwaySpeed (read-only)."""
-        return self._SwaySpeed
-
-    @SwaySpeed.setter
-    def SwaySpeed(self, cmp):
-        """The SwaySpeed (write)."""
-        self._SwaySpeed = cmp
-
-    @property
-    def YawRate(self):
-        """The YawRate (read-only)."""
-        return self._YawRate
-
-    @YawRate.setter
-    def YawRate(self, cmp):
-        """The YawRate (write)."""
-        self._YawRate = cmp
-
-    @property
-    def RollAngle(self):
-        """The RollAngle (read-only)."""
-        return self._RollAngle
-
-    @RollAngle.setter
-    def RollAngle(self, cmp):
-        """The RollAngle (write)."""
-        self._RollAngle = cmp
-
-    @property
-    def RollRate(self):
-        """The RollRate (read-only)."""
-        return self._RollRate
-
-    @RollRate.setter
-    def RollRate(self, cmp):
-        """The RollRate (write)."""
-        self._RollRate = cmp
-
-    @property
-    def Heading(self):
-        """The Heading (read-only)."""
-        return self._Heading
-
-    @Heading.setter
-    def Heading(self, cmp):
-        """The Heading (write)."""
-        self._Heading = cmp
-
-    @property
-    def x(self):
-        """The x (read-only)."""
-        return self._x
-
-    @x.setter
-    def x(self, cmp):
-        """The x (write)."""
-        self._x = cmp
-
-    @property
-    def y(self):
-        """The y (read-only)."""
-        return self._y
-
-    @y.setter
-    def y(self, cmp):
-        """The y (write)."""
-        self._y = cmp
-
-
-class shipAction(object):
-    def __init__(self):
-
-        self.name= "shipAction"
-        self._RudderAngle= 0.0
-        self._rpm= 0.0
-
-
-    @property
-    def RudderAngle(self):
-        """The RudderAngle (read-only)."""
-        return self._RudderAngle
-
-    @RudderAngle.setter
-    def RudderAngle(self, cmp):
-        """The RudderAngle (write)."""
-        self._RudderAngle = cmp
-
-    @property
-    def rpm(self):
-        """The rpm (read-only)."""
-        return self._rpm
-
-    @rpm.setter
-    def rpm(self, cmp):
-        """The rpm (write)."""
-        self._rpm = cmp
-
-
-class predictedPath(object):
-    def __init__(self):
-
-        self.name= "predictedPath"
-        self._Confidence= 0.0
-        self._waypoints= None
-
-
-    @property
-    def Confidence(self):
-        """The Confidence (read-only)."""
-        return self._Confidence
-
-    @Confidence.setter
-    def Confidence(self, cmp):
-        """The Confidence (write)."""
-        self._Confidence = cmp
-
-    @property
-    def waypoints(self):
-        """The waypoints (read-only)."""
-        return self._waypoints
-
-    @waypoints.setter
-    def waypoints(self, cmp):
-        """The waypoints (write)."""
-        self._waypoints = cmp
+    @NewPlan.setter
+    def NewPlan(self, cmp):
+        """The NewPlan (write)."""
+        self._NewPlan = cmp
 
 

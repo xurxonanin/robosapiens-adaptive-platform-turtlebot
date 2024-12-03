@@ -9,62 +9,32 @@ logger:
 
 knowledgeIn:
   properties:
-    - property:
-        type: "data"
-        name: "weatherConditions"
-        class: "weatherConditions"
-        topic: "/weatherConditions"
-        QoS: 10
-    - property:
-        type: "data"
-        name: "shipPose"
-        class: "shipPose"
-        topic: "/shipPose"
-        QoS: 10
-    - property:
-        type: "data"
-        name: "shipAction"
-        class: "shipAction"
-        topic: "/shipAction"
-        QoS: 10
 
 knowledgeOut:
   properties:
     - property:
         type: "data"
-        name: "pathEstimate"
-        class: "pathEstimate"
-        topic: "/pathEstimate"
+        name: "laser_scan"
+        class: "laser_scan"
+        topic: "/laser_scan"
         QoS: 10
 
 eventIn:
   properties:
     - property:
         type: "event"
-        name: "weatherConditions"
+        name: "Scan"
         class: "-"
-        topic: "/weatherConditions"
-        QoS: 10
-    - property:
-        type: "event"
-        name: "shipPose"
-        class: "-"
-        topic: "/shipPose"
-        QoS: 10
-    - property:
-        type: "event"
-        name: "shipAction"
-        class: "-"
-        topic: "/shipAction"
+        topic: "/Scan"
         QoS: 10
 
 eventOut:
   properties:
     - property:
         type: "event"
-        name: "pathEstimate"
+        name: "new_data"
         class: "-"
-        topic: "/pathEstimate"
+        topic: "/new_data"
         QoS: 10
 
 

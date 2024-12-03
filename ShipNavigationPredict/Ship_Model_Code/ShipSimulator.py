@@ -19,7 +19,7 @@ import json
 available_models = ["ShipModel_M1", "ShipModel_M2", "ShipModel_M7", "ShipModel_M12", "ShipModel_MS"]
 
 #RA probe and effector 
-from rpio.clientLibraries.rpclpy.node import Node
+from rpclpy.node import Node
 import time 
 class Probe(Node):
     def __init__(self, config ,verbose=True):

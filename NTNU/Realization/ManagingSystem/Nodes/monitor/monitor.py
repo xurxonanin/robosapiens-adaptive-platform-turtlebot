@@ -7,8 +7,13 @@
 # * permission of Bert Van Acker
 # **********************************************************************************
 from rpio.clientLibraries.rpclpy.node import Node
-from .messages import *
 import time
+
+try:
+    from .messages import *
+except (ValueError, ImportError):
+    from messages import *
+
 #<!-- cc_include START--!>
 # user includes here
 #<!-- cc_include END--!>
@@ -17,44 +22,40 @@ import time
 # user code here
 #<!-- cc_code END--!>
 
-class monitor(Node):
+class Monitor(Node):
 
     def __init__(self, config='config.yaml',verbose=True):
         super().__init__(config=config,verbose=verbose)
 
-        self._name = "monitor"
-        self.logger.info("monitor instantiated")
+        self._name = "Monitor"
+        self.logger.info("Monitor instantiated")
 
         #<!-- cc_init START--!>
         # user includes here
         #<!-- cc_init END--!>
 
-    # -----------------------------AUTO-GEN SKELETON FOR shipPoseEstimation-----------------------------
-    def shipPoseEstimation(self,msg):
-        weatherConditions = self.knowledge.read("weatherConditions",queueSize=1)
-        shipPose = self.knowledge.read("shipPose",queueSize=1)
-        shipAction = self.knowledge.read("shipAction",queueSize=1)
-        _predictedPath = predictedPath()
+    # -----------------------------AUTO-GEN SKELETON FOR monitor_data-----------------------------
+    def monitor_data(self,msg):
+        _LaserScan = LaserScan()
 
-        #<!-- cc_code_shipPoseEstimation START--!>
+        #<!-- cc_code_monitor_data START--!>
 
-        # user code here for shipPoseEstimation
+        # user code here for monitor_data
 
-        _predictedPath._Confidence= "SET VALUE"    # datatype: Float_32
-        _predictedPath._waypoints= "SET VALUE"    # datatype: String
+        _LaserScan._ranges= "SET VALUE"    # datatype: Array
+        _LaserScan._angle_increment= "SET VALUE"    # datatype: Float_64
 
-        #<!-- cc_code_shipPoseEstimation END--!>
+        #<!-- cc_code_monitor_data END--!>
 
-        self.publish_event(event_key='pathEstimate')    # LINK <outport> pathEstimate
+        _success = self.knowledge.write(cls=_LaserScan)
+        self.publish_event(event_key='new_data')    # LINK <outport> new_data
 
     def register_callbacks(self):
-        self.register_event_callback(event_key='weatherConditions', callback=self.shipPoseEstimation)        # LINK <inport> weatherConditions
-        self.register_event_callback(event_key='shipPose', callback=self.shipPoseEstimation)        # LINK <inport> shipPose
-        self.register_event_callback(event_key='shipAction', callback=self.shipPoseEstimation)        # LINK <inport> shipAction
+        self.register_event_callback(event_key='Scan', callback=self.monitor_data)     # LINK <eventTrigger> Scan
 
 def main(args=None):
 
-    node = monitor(config='config.yaml')
+    node = Monitor(config='config.yaml')
     node.register_callbacks()
     node.start()
 

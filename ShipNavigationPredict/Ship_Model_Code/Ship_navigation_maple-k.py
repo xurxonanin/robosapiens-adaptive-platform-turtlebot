@@ -165,8 +165,6 @@ class Analysis(Node):
             weather_condition['Wind Speed'])
         window_size = 300 # 60 sample equals to 1 minute       
         score = compare_trajectories(ship_status['x'][0 : window_size],ship_status['y'][0 : window_size],eta[0 : window_size, 0], eta[0 : window_size, 1]  ) 
-        print(f"similarity score is:{score}")
-
         # Set the monitor status to mark an anomaly if the there is any
 
         # # occlusion outside of the ignored region
