@@ -28,18 +28,6 @@ class Probe(Node):
         self._name = "probe"
         self.logger.info("Probe instantiated")
         self.plant = True
-
-        #<!-- cc_init START--!>
-        # user includes here
-        #<!-- cc_init END--!>
-    def effector(self, msg):
-        self.plant  = False
-
-        
-
-
-    def register_callbacks(self):
-        return super().register_event_callback(event_key="/model", callback= self.effector)
         
 
 class Effector(Node):
@@ -56,11 +44,12 @@ class Effector(Node):
         #<!-- cc_init END--!>
     def effector(self, msg):
         self.plant  = False
+        # self.plant.new_model = getattr(ship_maneuvering_model, msg)()    
         
 
 
     def register_callbacks(self):
-        return super().register_event_callback(event_key="/model", callback= self.effector)
+        return super().register_event_callback(event_key="/new_model", callback= self.effector)
 
 class ShipSim:
     def __init__(self, root):
@@ -80,6 +69,10 @@ class ShipSim:
         self.file_path = ''
         self.probe = Probe(config='config.yaml')
         self.probe.start()
+        self.effector = Effector(config='config.yaml')
+        self.effector.effector = self.add_new_model
+        self.effector.register_callbacks()
+        self.effector.start()
 
     def setup_gui(self):
         animate_button = tk.Button(self.root, text="Animate Ship", command=self.animate_file)
@@ -146,22 +139,22 @@ class ShipSim:
         ax.set_xlabel('x [m] - East')
         ax.set_ylabel('y [m] - North')
 
+
         def update(frame_num):
             ax.clear()
             ship_width, ship_length = int(x_scale/30), int(y_scale/30)
-
             ship = Rectangle((x[0] - ship_width / 2, y[0] - ship_length / 2), ship_width, ship_length, angle=heading[0], color='darkblue')
+            window = Rectangle((x[0], y[0]), ship_width/10, ship_length, color="green")
             ax.add_patch(ship)
+            ax.add_patch(window)
+            window_size = 300
             ship.set_xy([x[frame_num] - ship_width / 2, y[frame_num] - ship_length / 2])
-            ship = heading[frame_num]
-            # ax.set_title(f"File Path: {self.file_path} degrees")
-
+            window.set_xy([x[frame_num+window_size] - ship_width / 2, y[frame_num+window_size] - ship_length / 2])
             ax.plot(x, y, label='Current Trajectory')
             _data = self.data
             shifted_data = _data.shift(-frame_num)
             self.eta, self.nu = self.predict_trajectory(shifted_data)
             ax.plot(self.eta[:, 0], self.eta[:, 1], 'r--', label='Currecnt Prediction:'+ self.predicttion_model)
-            
             self.probe.publish_event(event_key='/ship_status', message= json.dumps({'ship_prediction_model':self.predicttion_model, 'Surge Speed':shifted_data['Surge Speed'][0],
             'Sway Speed':shifted_data['Sway Speed'][0],
             'Yaw Rate': shifted_data['Yaw Rate'][0],
@@ -200,12 +193,16 @@ class ShipSim:
             # df = self.load_data(self.file_path, self.model.U0)
             # messagebox.showinfo("go to ->"+ self.predicttion_new_model)
             self.predicttion_new_model= random.choice(available_models)
-            self.new_model = getattr(ship_maneuvering_model, self.predicttion_new_model)()    
+            self.add_new_model(self.predicttion_new_model) 
             
         #     # self.make_plots(self.data, eta, nu)
         except Exception as e:
             messagebox.showerror("Error", f"An error occurred: {e}")
 
+    def add_new_model(self, model):
+        print(f"new_mdoel is {model}")
+        self.predicttion_new_model = model
+        self.new_model = getattr(ship_maneuvering_model, model)()   
 
     def anomaly_detection(self):
         messagebox.showinfo("Anomaly Detection", "Anomaly detection functionality is not yet implemented.")
@@ -226,7 +223,6 @@ class ShipSim:
                 self.animate_ship(self.data)
             except Exception as e:
                 messagebox.showerror("Error", f"An error occurred: {e}")
-
 
 if __name__ == "__main__":
     root = tk.Tk()

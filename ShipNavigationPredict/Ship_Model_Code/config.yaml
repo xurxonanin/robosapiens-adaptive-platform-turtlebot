@@ -42,7 +42,7 @@ mqtt_broker: "localhost"
 mqtt_port: 1883
 
 mqtt_subscribe_topics:
-  - "model"
+  - "/new_model"
 
 mqtt_publish_topics:
   - "/ship_status"
