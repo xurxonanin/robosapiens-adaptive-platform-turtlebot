@@ -158,10 +158,10 @@ class NewPlanMessage(object):
         self._New_plan = cmp
 
 
-class NewModel(object):
+class Model(object):
     def __init__(self):
 
-        self.name= "NewModel"
+        self.name= "Model"
         self._ship_prediction_model= 'TBD'
 
 

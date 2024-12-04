@@ -17,9 +17,9 @@ knowledgeIn:
         QoS: 10
     - property:
         type: "data"
-        name: "model"
-        class: "model"
-        topic: "/model"
+        name: "Model"
+        class: "Model"
+        topic: "/Model"
         QoS: 10
 
 knowledgeOut:
@@ -33,12 +33,6 @@ knowledgeOut:
 
 eventIn:
   properties:
-    - property:
-        type: "event"
-        name: "new_plan"
-        class: "-"
-        topic: "/new_plan"
-        QoS: 10
     - property:
         type: "event"
         name: "isLegit"

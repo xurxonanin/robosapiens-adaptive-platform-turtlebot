@@ -35,25 +35,22 @@ class Execute(Node):
         #<!-- cc_init END--!>
 
     # -----------------------------AUTO-GEN SKELETON FOR executer-----------------------------
+
     def executer(self,msg):
         isLegit = self.knowledge.read("isLegit",queueSize=1)
-        model = self.knowledge.read("model",queueSize=1)
-        _NewModel = NewModel()
+        Model = self.knowledge.read("Model",queueSize=1)
+        # _Model = Model()
 
         #<!-- cc_code_executer START--!>
-
-        # user code here for executer
-
-        _predictedPath._Confidence= "SET VALUE"    # datatype: Float_32
-        _predictedPath._waypoints= "SET VALUE"    # datatype: String
+        # del(_Model)
+        # _Model = Model["ship_prediction_model"]
 
         #<!-- cc_code_executer END--!>
 
-        self.publish_event(event_key='new_model',message=_NewModel)    # LINK <outport> new_model
+        self.publish_event(event_key='new_model',message=Model["ship_prediction_model"])    # LINK <outport> new_model
 
     def register_callbacks(self):
         self.register_event_callback(event_key='new_plan', callback=self.executer)     # LINK <eventTrigger> new_plan
-        self.register_event_callback(event_key='new_plan', callback=self.executer)        # LINK <inport> new_plan
         self.register_event_callback(event_key='isLegit', callback=self.executer)        # LINK <inport> isLegit
 
 def main(args=None):

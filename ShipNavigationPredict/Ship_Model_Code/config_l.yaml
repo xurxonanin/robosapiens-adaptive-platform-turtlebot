@@ -42,10 +42,10 @@ mqtt_broker: "localhost"
 mqtt_port: 1883
 
 mqtt_subscribe_topics:
-  - "/new_plan"
+  - "new_plan"
 
 mqtt_publish_topics:
-  - "/legitimate_plan"
+  - "legitimate_plan"
 
 redis_host: "localhost"
 redis_port: 6379

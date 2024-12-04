@@ -91,25 +91,25 @@ class Analysis(Node):
 
     # -----------------------------AUTO-GEN SKELETON FOR analyse_trajectory_prediction-----------------------------
     def analyse_trajectory_prediction(self,msg):
-        ship_status = self.knowledge.read("ship_status",queueSize=1)
-        weather_condition = self.knowledge.read("weather_condition",queueSize=1)
+        ShipStatus = self.knowledge.read("ShipStatus",queueSize=1)
+        WeatherCondition = self.knowledge.read("WeatherCondition",queueSize=1)
 
         #<!-- cc_code_analyse_trajectory_prediction START--!>
-        self.ship_model = getattr(ship_maneuvering_model,ship_status["ship_prediction_model"])()
+        self.ship_model = getattr(ship_maneuvering_model,ShipStatus["ship_prediction_model"])()
                 # self.logger.info(f"REtrieved laser_scan: {self.lidar_data}")
-        self.ship_model = getattr(ship_maneuvering_model,ship_status["ship_prediction_model"])()
+        self.ship_model = getattr(ship_maneuvering_model,ShipStatus["ship_prediction_model"])()
         eta, nu =self.ship_model.predict(HydroPara_PI3,
-            ship_status['Surge Speed'],
-            ship_status['Sway Speed'],
-            ship_status['Yaw Rate'],
-            ship_status['Heading'],
-            ship_status['x'][0],
-            ship_status['y'][0],
-            weather_condition['Rudder Angle'],
-            weather_condition['Wind Direction'],
-            weather_condition['Wind Speed'])
+            ShipStatus['Surge Speed'],
+            ShipStatus['Sway Speed'],
+            ShipStatus['Yaw Rate'],
+            ShipStatus['Heading'],
+            ShipStatus['x'][0],
+            ShipStatus['y'][0],
+            ShipStatus['Rudder Angle'],
+            ShipStatus['Wind Direction'],
+            ShipStatus['Wind Speed'])
         window_size = 300 # 60 sample equals to 1 minute       
-        score = compare_trajectories(ship_status['x'][0 : window_size],ship_status['y'][0 : window_size],eta[0 : window_size, 0], eta[0 : window_size, 1]  ) 
+        score = compare_trajectories(ShipStatus['x'][0 : window_size],ShipStatus['y'][0 : window_size],eta[0 : window_size, 0], eta[0 : window_size, 1]  ) 
         # Set the monitor status to mark an anomaly if the there is any
 
         # # occlusion outside of the ignored region

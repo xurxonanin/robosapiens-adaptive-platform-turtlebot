@@ -49,7 +49,7 @@ class Effector(Node):
 
 
     def register_callbacks(self):
-        return super().register_event_callback(event_key="/new_model", callback= self.effector)
+        return super().register_event_callback(event_key="new_model", callback= self.effector)
 
 class ShipSim:
     def __init__(self, root):
@@ -156,13 +156,13 @@ class ShipSim:
             shifted_data = _data.shift(-frame_num)
             self.eta, self.nu = self.predict_trajectory(shifted_data)
             ax.plot(self.eta[:, 0], self.eta[:, 1], 'r--', label='Currecnt Prediction:'+ self.predicttion_model)
-            self.probe.publish_event(event_key='/ship_status', message= json.dumps({'ship_prediction_model':self.predicttion_model, 'surge_speed':shifted_data['Surge Speed'][0],
+            self.probe.publish_event(event_key='ship_status', message= json.dumps({'ship_prediction_model':self.predicttion_model, 'surge_speed':shifted_data['Surge Speed'][0],
             'sway_speed':shifted_data['Sway Speed'][0],
             'yaw_rate': shifted_data['Yaw Rate'][0],
             'heading': shifted_data['Heading'][0],
             'x': shifted_data['x'].to_list(),
             'y': shifted_data['y'].to_list()}))
-            self.probe.publish_event(event_key='/weather_condition', message= json.dumps({'Rudder Angle': shifted_data['rudder_angle'].tolist(),
+            self.probe.publish_event(event_key='weather_condition', message= json.dumps({'rudder_angle': shifted_data['Rudder Angle'].tolist(),
             'wind_direction': shifted_data['Wind Direction'].tolist(),
             'wind_speed':shifted_data['Wind Speed'].tolist()}))  
             

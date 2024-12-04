@@ -42,19 +42,19 @@ def NTNU():
     legitimate_message = message(name="LegitimateMessage",featureList=[legitimate])
 
     #new_model message
-    new_model_message = message(name="NewModel",featureList=[prediction_model])
+    model_message = message(name="Model",featureList=[prediction_model])
 
     #-----------------------------------------------------------------------------------------------------------------------
     #--------------------------------------- LOGICAL ARCHITECTURE ----------------------------------------------------------
     #-----------------------------------------------------------------------------------------------------------------------
-    adaptiveSystem = system(name="adaptiveSystem", description="Example adaptive system",messageList=[ship_status,weather_condition,anomaly_message,new_plan_message, new_model_message])
+    adaptiveSystem = system(name="adaptiveSystem", description="Example adaptive system",messageList=[ship_status,weather_condition,anomaly_message,new_plan_message, model_message])
 
     #-A- --- managed system ---
     managedSystem = system(name="managedSystem", description="managed system part")
 
     _shipStatus_OUT = outport(name="ship_status",type="event data", message= ship_status)
     _weatherCondition_OUT = outport(name="weather_condition",type="event data", message= weather_condition)
-    _model_IN = inport(name="new_model",type="event data", message=new_model_message)
+    _model_IN = inport(name="new_model",type="event data", message=model_message)
 
     managedSystem.addFeature(_shipStatus_OUT)
     managedSystem.addFeature(_weatherCondition_OUT)
@@ -66,7 +66,7 @@ def NTNU():
 
     _shipStatus_IN = inport(name="ship_status",type="event data", message= ship_status)
     _weatherCondition_IN = inport(name="weather_condition",type="event data", message= weather_condition)
-    _model_OUT = outport(name="new_model",type="event data", message=new_model_message)
+    _model_OUT = outport(name="new_model",type="event data", message=model_message)
 
     managingSystem.addFeature(_shipStatus_IN)
     managingSystem.addFeature(_weatherCondition_IN)
@@ -104,8 +104,8 @@ def NTNU():
     analysis = process(name="Analysis", description="analysis component")
 
     # Read from Knowledge 
-    _ship_status_in = inport(name="ship_status",type="data", message=ship_status)
-    _weather_condition_in = inport(name="weather_condition",type="data", message=weather_condition)
+    _ship_status_in = inport(name="ShipStatus",type="data", message=ship_status)
+    _weather_condition_in = inport(name="WeatherCondition",type="data", message=weather_condition)
 
     # Output Event
     _anomaly_out = outport(name="anomaly",type="event", message=anomaly_message)
@@ -122,17 +122,15 @@ def NTNU():
     plan = process(name="Plan", description="plan component")
 
     #TODO: define input
-    _anomaly_in = inport(name="anomaly",type="event", message=anomaly_message)
 
     _plan_out = outport(name="new_plan",type="event", message=new_plan_message)
-    _model_out = outport(name="model",type="data", message=new_model_message)
+    _model_out = outport(name="Model",type="data", message=model_message)
 
     plan.addFeature(_ship_status_in)
-    plan.addFeature(_anomaly_in)
     plan.addFeature(_plan_out)
     plan.addFeature(_model_out)
 
-    planner = thread(name="planner",featureList=[_anomaly_in,_ship_status_in,_plan_out, _model_out],eventTrigger='anomaly')
+    planner = thread(name="planner",featureList=[_ship_status_in,_plan_out, _model_out],eventTrigger='anomaly')
     plan.addThread(planner)
 
     #-LEGITIMATE-
@@ -141,17 +139,15 @@ def NTNU():
     #-EXECUTE-
     execute = process(name="Execute", description="execute component")
 
-    _new_plan_in = inport(name="new_plan",type="event", message=new_plan_message)
     _isLegit = inport(name="isLegit",type="event data", message=legitimate_message)
-    _directions = inport(name="model",type="data", message=new_model_message)
-    _directions_out = outport(name="new_model",type="data event", message=new_model_message)
+    _model = inport(name="Model",type="data", message=model_message)
+    _model_out = outport(name="new_model",type="data event", message=model_message)
 
-    execute.addFeature(_new_plan_in)
     execute.addFeature(_isLegit)
-    execute.addFeature(_directions)
-    execute.addFeature(_directions_out)
+    execute.addFeature(_model)
+    execute.addFeature(_model_out)
 
-    executer = thread(name="executer",featureList=[_new_plan_in,_isLegit,_directions, _directions_out], eventTrigger="new_plan")
+    executer = thread(name="executer",featureList=[_isLegit,_model, _model_out], eventTrigger="new_plan")
     execute.addThread(executer)
 
     # #-KNOWLEDGE-
