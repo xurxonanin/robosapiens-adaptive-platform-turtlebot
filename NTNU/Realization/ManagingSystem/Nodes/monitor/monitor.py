@@ -34,24 +34,55 @@ class Monitor(Node):
         # user includes here
         #<!-- cc_init END--!>
 
-    # -----------------------------AUTO-GEN SKELETON FOR monitor_data-----------------------------
-    def monitor_data(self,msg):
-        _LaserScan = LaserScan()
+    # -----------------------------AUTO-GEN SKELETON FOR monitor_ship-----------------------------
+    def monitor_ship(self,msg):
+        _ShipStatus = ShipStatus()
 
-        #<!-- cc_code_monitor_data START--!>
+        #<!-- cc_code_monitor_ship START--!>
 
-        # user code here for monitor_data
+        # user code here for monitor_ship
+        
+        # Fill the class instance properties
+        for key, value in msg.items():
+            # Prepend an underscore to match class properties
+            underscore_key = f"_{key}"
+            if hasattr(_ShipStatus, underscore_key):
+                setattr(_ShipStatus, underscore_key, value)
+        # _ShipStatus._ship_prediction_model= "SET VALUE"    # datatype: string
+        # _ShipStatus._surge_speed= "SET VALUE"    # datatype: Float_64
+        # _ShipStatus._sway_speed= "SET VALUE"    # datatype: Float_64
+        # _ShipStatus._yaw_rate= "SET VALUE"    # datatype: Float_64
+        # _ShipStatus._heading= "SET VALUE"    # datatype: Float_64
+        # _ShipStatus._x= "SET VALUE"    # datatype: Array
+        # _ShipStatus._y= "SET VALUE"    # datatype: Array
 
-        _LaserScan._ranges= "SET VALUE"    # datatype: Array
-        _LaserScan._angle_increment= "SET VALUE"    # datatype: Float_64
+        #<!-- cc_code_monitor_ship END--!>
 
-        #<!-- cc_code_monitor_data END--!>
-
-        _success = self.knowledge.write(cls=_LaserScan)
+        _success = self.knowledge.write(cls=_ShipStatus)
         self.publish_event(event_key='new_data')    # LINK <outport> new_data
+    # -----------------------------AUTO-GEN SKELETON FOR monitor_weather-----------------------------
+    def monitor_weather(self,msg):
+        _WeatherCondition = WeatherCondition()
+
+        #<!-- cc_code_monitor_weather START--!>
+
+        # user code here for monitor_weather
+        for key, value in msg.items():
+            # Prepend an underscore to match class properties
+            underscore_key = f"_{key}"
+            if hasattr(_WeatherCondition, underscore_key):
+                setattr(_WeatherCondition, underscore_key, value)
+        # _WeatherCondition._rudder_angle= "SET VALUE"    # datatype: Array
+        # _WeatherCondition._wind_direction= "SET VALUE"    # datatype: Array
+        # _WeatherCondition._wind_speed= "SET VALUE"    # datatype: Array
+
+        #<!-- cc_code_monitor_weather END--!>
+
+        _success = self.knowledge.write(cls=_WeatherCondition)
 
     def register_callbacks(self):
-        self.register_event_callback(event_key='Scan', callback=self.monitor_data)     # LINK <eventTrigger> Scan
+        self.register_event_callback(event_key='ship_status', callback=self.monitor_ship)     # LINK <eventTrigger> ship_status
+        self.register_event_callback(event_key='weather_condition', callback=self.monitor_weather)     # LINK <eventTrigger> weather_condition
 
 def main(args=None):
 

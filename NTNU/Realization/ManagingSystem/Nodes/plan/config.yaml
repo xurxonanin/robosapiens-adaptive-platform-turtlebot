@@ -9,20 +9,20 @@ logger:
 
 knowledgeIn:
   properties:
+    - property:
+        type: "data"
+        name: "ship_status"
+        class: "ship_status"
+        topic: "/ship_status"
+        QoS: 10
 
 knowledgeOut:
   properties:
     - property:
         type: "data"
-        name: "new_plan"
-        class: "new_plan"
-        topic: "/new_plan"
-        QoS: 10
-    - property:
-        type: "data"
-        name: "direction"
-        class: "direction"
-        topic: "/direction"
+        name: "model"
+        class: "model"
+        topic: "/model"
         QoS: 10
 
 eventIn:
@@ -42,6 +42,12 @@ eventIn:
 
 eventOut:
   properties:
+    - property:
+        type: "event"
+        name: "new_plan"
+        class: "-"
+        topic: "/new_plan"
+        QoS: 10
 
 
 mqtt_broker: "192.168.0.117"

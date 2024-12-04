@@ -14,18 +14,30 @@ knowledgeOut:
   properties:
     - property:
         type: "data"
-        name: "laser_scan"
-        class: "laser_scan"
-        topic: "/laser_scan"
+        name: "ship_status"
+        class: "ship_status"
+        topic: "/ship_status"
+        QoS: 10
+    - property:
+        type: "data"
+        name: "weather_condition"
+        class: "weather_condition"
+        topic: "/weather_condition"
         QoS: 10
 
 eventIn:
   properties:
     - property:
         type: "event"
-        name: "Scan"
+        name: "ship_status"
         class: "-"
-        topic: "/Scan"
+        topic: "/ship_status"
+        QoS: 10
+    - property:
+        type: "event"
+        name: "weather_condition"
+        class: "-"
+        topic: "/weather_condition"
         QoS: 10
 
 eventOut:

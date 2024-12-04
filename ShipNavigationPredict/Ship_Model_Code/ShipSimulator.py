@@ -110,6 +110,7 @@ class ShipSim:
             df['Wind Speed']
         )
         return eta, nu
+        
     def new_predict_trajectory(self, df):
         eta, nu = self.new_model.predict(
             HydroPara_PI3,
@@ -155,15 +156,15 @@ class ShipSim:
             shifted_data = _data.shift(-frame_num)
             self.eta, self.nu = self.predict_trajectory(shifted_data)
             ax.plot(self.eta[:, 0], self.eta[:, 1], 'r--', label='Currecnt Prediction:'+ self.predicttion_model)
-            self.probe.publish_event(event_key='/ship_status', message= json.dumps({'ship_prediction_model':self.predicttion_model, 'Surge Speed':shifted_data['Surge Speed'][0],
-            'Sway Speed':shifted_data['Sway Speed'][0],
-            'Yaw Rate': shifted_data['Yaw Rate'][0],
-            'Heading': shifted_data['Heading'][0],
+            self.probe.publish_event(event_key='/ship_status', message= json.dumps({'ship_prediction_model':self.predicttion_model, 'surge_speed':shifted_data['Surge Speed'][0],
+            'sway_speed':shifted_data['Sway Speed'][0],
+            'yaw_rate': shifted_data['Yaw Rate'][0],
+            'heading': shifted_data['Heading'][0],
             'x': shifted_data['x'].to_list(),
             'y': shifted_data['y'].to_list()}))
-            self.probe.publish_event(event_key='/weather_condition', message= json.dumps({'Rudder Angle': shifted_data['Rudder Angle'].tolist(),
-            'Wind Direction': shifted_data['Wind Direction'].tolist(),
-            'Wind Speed':shifted_data['Wind Speed'].tolist()}))  
+            self.probe.publish_event(event_key='/weather_condition', message= json.dumps({'Rudder Angle': shifted_data['rudder_angle'].tolist(),
+            'wind_direction': shifted_data['Wind Direction'].tolist(),
+            'wind_speed':shifted_data['Wind Speed'].tolist()}))  
             
             if self.predicttion_model != self.predicttion_new_model:
                 _eta, _nu = self.new_predict_trajectory(shifted_data)

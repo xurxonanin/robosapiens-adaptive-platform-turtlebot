@@ -143,7 +143,7 @@ class Analysis(Node):
         #<!-- cc_init END--!>
 
     # -----------------------------AUTO-GEN SKELETON FOR analyse_scan_data-----------------------------
-    def analyse_prediction_trajectory(self,msg):
+    def analyse_trajectory_prediction(self,msg):
         ship_status = self.knowledge.read("ship_status",queueSize=1)
         weather_condition = self.knowledge.read("weather_condition")
         
@@ -185,7 +185,7 @@ class Analysis(Node):
         # self.publish_event(event_key='anomaly')    # LINK <outport> anomaly
 
     def register_callbacks(self):
-        self.register_event_callback(event_key='/new_data', callback=self.analyse_prediction_trajectory)     # LINK <eventTrigger> new_data
+        self.register_event_callback(event_key='/new_data', callback=self.analyse_trajectory_prediction)     # LINK <eventTrigger> new_data
 
 
 class Plan(Node):

@@ -15,11 +15,64 @@ except (ValueError, ImportError):
     from messages import *
 
 #<!-- cc_include START--!>
-# user includes here
+import ship_maneuvering_model
+import HydroPara_PI3_alternative1 as HydroPara_PI3
+import numpy as np
 #<!-- cc_include END--!>
 
 #<!-- cc_code START--!>
-# user code here
+
+def compare_trajectories(x, y, predicted_x, predicted_y):
+    """
+    Compare two trajectories given by x, y and predicted_x, predicted_y arrays,
+    normalize the trajectories, and return a similarity score.
+
+    Parameters:
+        x: list or array of floats - Actual x coordinates
+        y: list or array of floats - Actual y coordinates
+        predicted_x: list or array of floats - Predicted x coordinates
+        predicted_y: list or array of floats - Predicted y coordinates
+
+    Returns:
+        similarity_score: float - A score representing similarity (higher is better)
+    """
+    # Ensure all input arrays have the same length
+    if len(x) != len(y) or len(y) != len(predicted_x) or len(predicted_x) != len(predicted_y):
+        raise ValueError("All input arrays must have the same length")
+
+    # Convert inputs to numpy arrays
+    x = np.array(x)
+    y = np.array(y)
+    predicted_x = np.array(predicted_x)
+    predicted_y = np.array(predicted_y)
+
+    # Normalize the trajectories to fit in a unit square (0 to 1 range)
+    def normalize(arr1, arr2):
+        min_val = min(arr1.min(), arr2.min())  # Find the minimum value across both arrays
+        max_val = max(arr1.max(), arr2.max())  # Find the maximum value across both arrays
+        range_val = max_val - min_val         # Calculate the range
+        if range_val == 0:                    # Handle edge case where all values are the same
+            return arr1, arr2
+        return (arr1 - min_val) / range_val, (arr2 - min_val) / range_val
+
+    # Normalize x and predicted_x
+    x, predicted_x = normalize(x, predicted_x)
+
+    # Normalize y and predicted_y
+    y, predicted_y = normalize(y, predicted_y)
+
+    # Combine x and y into coordinate pairs
+    actual = np.array(list(zip(x, y)))
+    predicted = np.array(list(zip(predicted_x, predicted_y)))
+
+    # Calculate Euclidean distances between corresponding points
+    distances = np.linalg.norm(actual - predicted, axis=1)
+
+    # Compute the similarity score (1 / (1 + average distance))
+    average_distance = np.mean(distances)
+    similarity_score = 1 / (1 + average_distance)  # Higher score means more similar
+
+    return similarity_score
 #<!-- cc_code END--!>
 
 class Analysis(Node):
@@ -31,24 +84,55 @@ class Analysis(Node):
         self.logger.info("Analysis instantiated")
 
         #<!-- cc_init START--!>
-        # user includes here
+        self.anomaly = False
+        self.ship_model = None
+        
         #<!-- cc_init END--!>
 
-    # -----------------------------AUTO-GEN SKELETON FOR analyse_scan_data-----------------------------
-    def analyse_scan_data(self,msg):
-        laser_scan = self.knowledge.read("laser_scan",queueSize=1)
+    # -----------------------------AUTO-GEN SKELETON FOR analyse_trajectory_prediction-----------------------------
+    def analyse_trajectory_prediction(self,msg):
+        ship_status = self.knowledge.read("ship_status",queueSize=1)
+        weather_condition = self.knowledge.read("weather_condition",queueSize=1)
 
-        #<!-- cc_code_analyse_scan_data START--!>
+        #<!-- cc_code_analyse_trajectory_prediction START--!>
+        self.ship_model = getattr(ship_maneuvering_model,ship_status["ship_prediction_model"])()
+                # self.logger.info(f"REtrieved laser_scan: {self.lidar_data}")
+        self.ship_model = getattr(ship_maneuvering_model,ship_status["ship_prediction_model"])()
+        eta, nu =self.ship_model.predict(HydroPara_PI3,
+            ship_status['Surge Speed'],
+            ship_status['Sway Speed'],
+            ship_status['Yaw Rate'],
+            ship_status['Heading'],
+            ship_status['x'][0],
+            ship_status['y'][0],
+            weather_condition['Rudder Angle'],
+            weather_condition['Wind Direction'],
+            weather_condition['Wind Speed'])
+        window_size = 300 # 60 sample equals to 1 minute       
+        score = compare_trajectories(ship_status['x'][0 : window_size],ship_status['y'][0 : window_size],eta[0 : window_size, 0], eta[0 : window_size, 1]  ) 
+        # Set the monitor status to mark an anomaly if the there is any
 
-        # user code here for analyse_scan_data
+        # # occlusion outside of the ignored region
+        anomaly_status_old = self.anomaly
+        if score: 
+            if score > 0.97 : 
+                self.anomaly = False
+                self.logger.info(f" Anomaly: {self.anomaly}, similarity score is:{score}")
+            else: 
+                self.anomaly = True
+                self.logger.info(f" Anomaly: {self.anomaly}, similarity score is:{score}")
+            if anomaly_status_old != self.anomaly:
+                if (self.anomaly == True):
+                    self.publish_event(event_key='anomaly')
 
 
-        #<!-- cc_code_analyse_scan_data END--!>
 
-        self.publish_event(event_key='anomaly')    # LINK <outport> anomaly
+        #<!-- cc_code_analyse_trajectory_prediction END--!>
+
+        # self.publish_event(event_key='anomaly')    # LINK <outport> anomaly
 
     def register_callbacks(self):
-        self.register_event_callback(event_key='new_data', callback=self.analyse_scan_data)     # LINK <eventTrigger> new_data
+        self.register_event_callback(event_key='new_data', callback=self.analyse_trajectory_prediction)     # LINK <eventTrigger> new_data
 
 def main(args=None):
 

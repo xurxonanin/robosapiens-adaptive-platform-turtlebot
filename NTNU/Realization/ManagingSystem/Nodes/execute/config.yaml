@@ -17,18 +17,18 @@ knowledgeIn:
         QoS: 10
     - property:
         type: "data"
-        name: "directions"
-        class: "directions"
-        topic: "/directions"
+        name: "model"
+        class: "model"
+        topic: "/model"
         QoS: 10
 
 knowledgeOut:
   properties:
     - property:
         type: "data"
-        name: "spin_config"
-        class: "spin_config"
-        topic: "/spin_config"
+        name: "new_model"
+        class: "new_model"
+        topic: "/new_model"
         QoS: 10
 
 eventIn:
@@ -45,14 +45,20 @@ eventIn:
         class: "-"
         topic: "/isLegit"
         QoS: 10
+    - property:
+        type: "event"
+        name: "new_plan"
+        class: "-"
+        topic: "/new_plan"
+        QoS: 10
 
 eventOut:
   properties:
     - property:
         type: "event"
-        name: "spin_config"
+        name: "new_model"
         class: "-"
-        topic: "/spin_config"
+        topic: "/new_model"
         QoS: 10
 
 

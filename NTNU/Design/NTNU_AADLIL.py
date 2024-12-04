@@ -9,15 +9,23 @@ def NTNU():
 
 
     #ShipStatus message
-    ranges = data(name='ranges', dataType="Array")
-    angle_increment = data(name= 'angle_increment', dataType="Float_64")
+    prediction_model = data(name="ship_prediction_model", dataType="string")
+    surge_speed = data(name='surge_speed', dataType="Float_64")
+    sway_speed = data(name='sway_speed', dataType="Float_64")
+    yaw_rate = data(name= 'yaw_rate', dataType="Float_64")
+    heading = data(name= 'heading', dataType="Float_64")
+    x = data(name='x', dataType="Array")
+    y = data(name='y',dataType="Array")
 
-    laser_scan = message(name="LaserScan",featureList=[ranges,angle_increment])
+    ship_status = message(name="ShipStatus",featureList=[prediction_model,surge_speed, sway_speed,yaw_rate, heading, x, y ])
 
-    # rotationAction message
-    omega = data(name="omega",dataType="Float_64")
-    duration = data(name="duration",dataType="Float_64")
-    direction = message(name="Direction",featureList=[omega,duration])
+    #weather_condition 
+    rudder_angle = data(name='rudder_angle', dataType="Array")
+    wind_direction = data(name='wind_direction', dataType="Array")
+    wind_speed = data(name='wind_speed', dataType="Array")
+
+    weather_condition = message(name="WeatherCondition", featureList=[rudder_angle, wind_direction, wind_speed])
+
 
     # new_data message
     new_data = data(name="new_data",dataType="Boolean")
@@ -25,41 +33,49 @@ def NTNU():
     # anomaly message
     anomaly = data(name="anomaly",dataType="Boolean")
     anomaly_message = message(name="AnomalyMessage",featureList=[anomaly])
-
-    new_plan = data(name="NewPlan",dataType="Boolean")
+    #new_plan message
+    new_plan = data(name="New_plan",dataType="Boolean")
     new_plan_message = message(name="NewPlanMessage",featureList=[new_plan])
 
     # legitimate message
     legitimate = data(name="legitimate",dataType="Boolean")
     legitimate_message = message(name="LegitimateMessage",featureList=[legitimate])
 
+    #new_model message
+    new_model_message = message(name="NewModel",featureList=[prediction_model])
+
     #-----------------------------------------------------------------------------------------------------------------------
     #--------------------------------------- LOGICAL ARCHITECTURE ----------------------------------------------------------
     #-----------------------------------------------------------------------------------------------------------------------
-    adaptiveSystem = system(name="adaptiveSystem", description="Example adaptive system",messageList=[laser_scan,direction,anomaly_message,new_plan_message])
+    adaptiveSystem = system(name="adaptiveSystem", description="Example adaptive system",messageList=[ship_status,weather_condition,anomaly_message,new_plan_message, new_model_message])
 
     #-A- --- managed system ---
     managedSystem = system(name="managedSystem", description="managed system part")
 
-    _laserScan_OUT = outport(name="laser_scan",type="event data", message= laser_scan)
-    _direction_IN = inport(name="direction",type="event data", message=direction)
+    _shipStatus_OUT = outport(name="ship_status",type="event data", message= ship_status)
+    _weatherCondition_OUT = outport(name="weather_condition",type="event data", message= weather_condition)
+    _model_IN = inport(name="new_model",type="event data", message=new_model_message)
 
-    managedSystem.addFeature(_laserScan_OUT)
-    managedSystem.addFeature(_direction_IN)
+    managedSystem.addFeature(_shipStatus_OUT)
+    managedSystem.addFeature(_weatherCondition_OUT)
+    managedSystem.addFeature(_model_IN)
 
     #-B- --- managing system ---
 
     managingSystem = system(name="managingSystem", description="managing system part")
 
-    _laser_scan_IN = inport(name="laser_scan",type="event data", message=laser_scan)
-    _direction_OUT = outport(name="direction",type="event data", message=direction)
+    _shipStatus_IN = inport(name="ship_status",type="event data", message= ship_status)
+    _weatherCondition_IN = inport(name="weather_condition",type="event data", message= weather_condition)
+    _model_OUT = outport(name="new_model",type="event data", message=new_model_message)
 
-    managingSystem.addFeature(_laser_scan_IN)
-    managingSystem.addFeature(_direction_OUT)
+    managingSystem.addFeature(_shipStatus_IN)
+    managingSystem.addFeature(_weatherCondition_IN)
+    managingSystem.addFeature(_model_OUT)
 
     # connections
-    c1 = connection(source=_laserScan_OUT, destination=_laser_scan_IN)
-    c2 = connection(source=_direction_OUT, destination=_direction_IN)
+    c1 = connection(source=_shipStatus_OUT, destination=_shipStatus_IN)
+    c2 = connection(source=_weatherCondition_OUT, destination=_weatherCondition_IN)
+    c3 = connection(source=_model_OUT, destination=_model_IN)
 
 
     #---------------------COMPONENT LEVEL---------------------------
@@ -67,27 +83,39 @@ def NTNU():
     #-MONITOR-
     monitor = process(name="Monitor", description="monitor component")
 
-    _laserScan = outport(name="laser_scan",type="data", message=laser_scan)
+    # Wrtite on Knowledge
+    _ship_status = outport(name="ship_status",type="data", message=ship_status)
+    _weather_condition= outport(name="weather_condition",type="data", message=weather_condition)
+
+    # Output event
     _new_data_out = outport(name="new_data",type="event" , message=new_data_message)
 
 
-    monitor.addFeature(_laserScan)
+    monitor.addFeature(_ship_status)
+    monitor.addFeature(_weather_condition)
     monitor.addFeature(_new_data_out)
 
-    monitor_data = thread(name="monitor_data",featureList=[_laserScan, _new_data_out],eventTrigger='Scan')
-    monitor.addThread(monitor_data)
+    monitor_ship = thread(name="monitor_ship",featureList=[_ship_status, _new_data_out], eventTrigger='ship_status')
+    monitor_weather = thread(name="monitor_weather",featureList=[_weather_condition], eventTrigger='weather_condition')
+    monitor.addThread(monitor_ship)
+    monitor.addThread(monitor_weather)
 
     #-ANALYSIS-
     analysis = process(name="Analysis", description="analysis component")
 
-    _laserScan_in = inport(name="laser_scan",type="data", message=laser_scan)
+    # Read from Knowledge 
+    _ship_status_in = inport(name="ship_status",type="data", message=ship_status)
+    _weather_condition_in = inport(name="weather_condition",type="data", message=weather_condition)
+
+    # Output Event
     _anomaly_out = outport(name="anomaly",type="event", message=anomaly_message)
 
-    analysis.addFeature(_laserScan_in)
+    analysis.addFeature(_ship_status_in)
+    analysis.addFeature(_weather_condition_in)
     analysis.addFeature(_anomaly_out)
 
-    analyse_scan_data = thread(name="analyse_scan_data",featureList=[_laserScan_in,_anomaly_out],eventTrigger='new_data')
-    analysis.addThread(analyse_scan_data)
+    analyse_trajectory_prediction = thread(name="analyse_trajectory_prediction",featureList=[_ship_status_in,_weather_condition_in ,_anomaly_out],eventTrigger='new_data')
+    analysis.addThread(analyse_trajectory_prediction)
 
 
     #-PLAN-
@@ -95,14 +123,16 @@ def NTNU():
 
     #TODO: define input
     _anomaly_in = inport(name="anomaly",type="event", message=anomaly_message)
-    _plan_out = outport(name="new_plan",type="data", message=new_plan_message)
-    _diraction_out = outport(name="direction",type="data", message=direction)
 
+    _plan_out = outport(name="new_plan",type="event", message=new_plan_message)
+    _model_out = outport(name="model",type="data", message=new_model_message)
+
+    plan.addFeature(_ship_status_in)
     plan.addFeature(_anomaly_in)
     plan.addFeature(_plan_out)
-    plan.addFeature(_diraction_out)
+    plan.addFeature(_model_out)
 
-    planner = thread(name="planner",featureList=[_anomaly_in, _plan_out, _diraction_out],eventTrigger='anomaly')
+    planner = thread(name="planner",featureList=[_anomaly_in,_ship_status_in,_plan_out, _model_out],eventTrigger='anomaly')
     plan.addThread(planner)
 
     #-LEGITIMATE-
@@ -111,17 +141,17 @@ def NTNU():
     #-EXECUTE-
     execute = process(name="Execute", description="execute component")
 
-    _new_plan_in = inport(name="new_plan",type="event", message=direction)
+    _new_plan_in = inport(name="new_plan",type="event", message=new_plan_message)
     _isLegit = inport(name="isLegit",type="event data", message=legitimate_message)
-    _directions = inport(name="directions",type="data", message=direction)
-    _directions_out = outport(name="spin_config",type="data event", message=direction)
+    _directions = inport(name="model",type="data", message=new_model_message)
+    _directions_out = outport(name="new_model",type="data event", message=new_model_message)
 
     execute.addFeature(_new_plan_in)
     execute.addFeature(_isLegit)
     execute.addFeature(_directions)
     execute.addFeature(_directions_out)
 
-    executer = thread(name="executer",featureList=[_new_plan_in,_isLegit,_directions, _directions_out])
+    executer = thread(name="executer",featureList=[_new_plan_in,_isLegit,_directions, _directions_out], eventTrigger="new_plan")
     execute.addThread(executer)
 
     # #-KNOWLEDGE-
@@ -214,7 +244,7 @@ def NTNU():
 
     return adaptiveSystem
 
-HelloWorldDesign=NTNU()
+NTNUDesign=NTNU()
 
 
 

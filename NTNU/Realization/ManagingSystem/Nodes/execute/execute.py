@@ -37,8 +37,8 @@ class Execute(Node):
     # -----------------------------AUTO-GEN SKELETON FOR executer-----------------------------
     def executer(self,msg):
         isLegit = self.knowledge.read("isLegit",queueSize=1)
-        directions = self.knowledge.read("directions",queueSize=1)
-        _Direction = Direction()
+        model = self.knowledge.read("model",queueSize=1)
+        _NewModel = NewModel()
 
         #<!-- cc_code_executer START--!>
 
@@ -49,9 +49,10 @@ class Execute(Node):
 
         #<!-- cc_code_executer END--!>
 
-        self.publish_event(event_key='spin_config',message=_Direction)    # LINK <outport> spin_config
+        self.publish_event(event_key='new_model',message=_NewModel)    # LINK <outport> new_model
 
     def register_callbacks(self):
+        self.register_event_callback(event_key='new_plan', callback=self.executer)     # LINK <eventTrigger> new_plan
         self.register_event_callback(event_key='new_plan', callback=self.executer)        # LINK <inport> new_plan
         self.register_event_callback(event_key='isLegit', callback=self.executer)        # LINK <inport> isLegit
 
