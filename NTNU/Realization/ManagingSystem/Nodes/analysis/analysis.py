@@ -129,7 +129,7 @@ class Analysis(Node):
 
         #<!-- cc_code_analyse_trajectory_prediction END--!>
 
-        # self.publish_event(event_key='anomaly')    # LINK <outport> anomaly
+        self.publish_event(event_key='anomaly')    # LINK <outport> anomaly
 
     def register_callbacks(self):
         self.register_event_callback(event_key='new_data', callback=self.analyse_trajectory_prediction)     # LINK <eventTrigger> new_data
