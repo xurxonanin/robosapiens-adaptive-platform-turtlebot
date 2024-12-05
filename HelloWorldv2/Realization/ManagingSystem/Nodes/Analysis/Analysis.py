@@ -7,13 +7,21 @@
 # * permission of Bert Van Acker
 # **********************************************************************************
 from rpio.clientLibraries.rpclpy.node import Node
-from .messages import *
+try:
+    from .messages import *
+except (ValueError, ImportError):
+    from messages import *
 import time
 #<!-- cc_include START--!>
 from fractions import Fraction
-from .lidarocclusion.masks import BoolLidarMask, ProbLidarMask
-from .lidarocclusion.sliding_lidar_masks import sliding_lidar_mask, sliding_prob_lidar_mask
-from .lidarocclusion.masks import BoolLidarMask
+try:
+    from .lidarocclusion.masks import BoolLidarMask, ProbLidarMask
+    from .lidarocclusion.sliding_lidar_masks import sliding_lidar_mask, sliding_prob_lidar_mask
+    from .lidarocclusion.masks import BoolLidarMask
+except (ValueError, ImportError):
+    from lidarocclusion.masks import BoolLidarMask, ProbLidarMask
+    from lidarocclusion.sliding_lidar_masks import sliding_lidar_mask, sliding_prob_lidar_mask
+    from lidarocclusion.masks import BoolLidarMask
 from typing import List, Tuple, Dict
 import traceback
 import numpy as np

@@ -7,7 +7,10 @@
 # * permission of Bert Van Acker
 # **********************************************************************************
 from rpio.clientLibraries.rpclpy.node import Node
-from .messages import *
+try:
+    from .messages import *
+except (ValueError, ImportError):
+    from messages import *
 import time
 #<!-- cc_include START--!>
 # user includes here
