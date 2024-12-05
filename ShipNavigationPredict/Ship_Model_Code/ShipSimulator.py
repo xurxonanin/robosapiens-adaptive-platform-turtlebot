@@ -50,11 +50,63 @@ class Effector(Node):
 
     def register_callbacks(self):
         return super().register_event_callback(event_key="new_model", callback= self.effector)
+    
+def compare_trajectories(x, y, predicted_x, predicted_y):
+    """
+    Compare two trajectories given by x, y and predicted_x, predicted_y arrays,
+    normalize the trajectories, and return a similarity score.
+
+    Parameters:
+        x: list or array of floats - Actual x coordinates
+        y: list or array of floats - Actual y coordinates
+        predicted_x: list or array of floats - Predicted x coordinates
+        predicted_y: list or array of floats - Predicted y coordinates
+
+    Returns:
+        similarity_score: float - A score representing similarity (higher is better)
+    """
+    # Ensure all input arrays have the same length
+    if len(x) != len(y) or len(y) != len(predicted_x) or len(predicted_x) != len(predicted_y):
+        raise ValueError("All input arrays must have the same length")
+
+    # Convert inputs to numpy arrays
+    x = np.array(x)
+    y = np.array(y)
+    predicted_x = np.array(predicted_x)
+    predicted_y = np.array(predicted_y)
+
+    # Normalize the trajectories to fit in a unit square (0 to 1 range)
+    def normalize(arr1, arr2):
+        min_val = min(arr1.min(), arr2.min())  # Find the minimum value across both arrays
+        max_val = max(arr1.max(), arr2.max())  # Find the maximum value across both arrays
+        range_val = max_val - min_val         # Calculate the range
+        if range_val == 0:                    # Handle edge case where all values are the same
+            return arr1, arr2
+        return (arr1 - min_val) / range_val, (arr2 - min_val) / range_val
+
+    # Normalize x and predicted_x
+    x, predicted_x = normalize(x, predicted_x)
+
+    # Normalize y and predicted_y
+    y, predicted_y = normalize(y, predicted_y)
+
+    # Combine x and y into coordinate pairs
+    actual = np.array(list(zip(x, y)))
+    predicted = np.array(list(zip(predicted_x, predicted_y)))
+
+    # Calculate Euclidean distances between corresponding points
+    distances = np.linalg.norm(actual - predicted, axis=1)
+
+    # Compute the similarity score (1 / (1 + average distance))
+    average_distance = np.mean(distances)
+    similarity_score = 1 / (1 + average_distance)  # Higher score means more similar
+
+    return similarity_score
 
 class ShipSim:
     def __init__(self, root):
-        self.predicttion_model = random.choice(available_models)
-        self.predicttion_new_model = random.choice(available_models)
+        self.predicttion_model = "ShipModel_MS"
+        self.predicttion_new_model = "ShipModel_MS"
         self.model = getattr(ship_maneuvering_model, self.predicttion_model)()
         self.new_model = getattr(ship_maneuvering_model, self.predicttion_new_model)()
         self.root = root
@@ -165,13 +217,14 @@ class ShipSim:
             self.probe.publish_event(event_key='weather_condition', message= json.dumps({'rudder_angle': shifted_data['Rudder Angle'].tolist(),
             'wind_direction': shifted_data['Wind Direction'].tolist(),
             'wind_speed':shifted_data['Wind Speed'].tolist()}))  
-            
+
+            score = compare_trajectories(shifted_data['x'][0 : window_size],shifted_data['y'][0 : window_size],self.eta[0 : window_size, 0], self.eta[0 : window_size, 1]  ) 
             if self.predicttion_model != self.predicttion_new_model:
                 _eta, _nu = self.new_predict_trajectory(shifted_data)
                 ax.plot(_eta[:, 0], _eta[:, 1], 'g--', label='New Prediction:'+ self.predicttion_new_model)
-                ax.set_title(self.predicttion_model+ "->"+self.predicttion_new_model)
+                ax.set_title(f"{self.predicttion_model} -> {self.predicttion_new_model}")
             else: 
-                ax.set_title(self.predicttion_model)
+                ax.set_title(f"{self.predicttion_model}, score:{score: .3f}")
             fig.legend(loc = "lower left")
             fig.canvas.draw()
             return ship
