@@ -35,19 +35,18 @@ class Execute(Node):
         #<!-- cc_init END--!>
 
     # -----------------------------AUTO-GEN SKELETON FOR executer-----------------------------
-
     def executer(self,msg):
         isLegit = self.knowledge.read("isLegit",queueSize=1)
         Model = self.knowledge.read("Model",queueSize=1)
-        # _Model = Model()
 
         #<!-- cc_code_executer START--!>
         # del(_Model)
         # _Model = Model["ship_prediction_model"]
-
+        self.publish_event(event_key='new_model', message=Model["ship_prediction_model"])
         #<!-- cc_code_executer END--!>
 
-        self.publish_event(event_key='new_model',message=Model["ship_prediction_model"])    # LINK <outport> new_model
+        # TODO: Put desired publish event inside user code and uncomment!!
+        #self.publish_event(event_key='new_model')    # LINK <outport> new_model
 
     def register_callbacks(self):
         self.register_event_callback(event_key='new_plan', callback=self.executer)     # LINK <eventTrigger> new_plan

@@ -49,11 +49,12 @@ class Plan(Node):
 
         _Model._ship_prediction_model = random.choice(filtered_models)
 
-
+        self.publish_event(event_key='new_plan')
         #<!-- cc_code_planner END--!>
 
         _success = self.knowledge.write(cls=_Model)
-        self.publish_event(event_key='new_plan')    # LINK <outport> new_plan
+        # TODO: Put desired publish event inside user code and uncomment!!
+        #self.publish_event(event_key='new_plan')    # LINK <outport> new_plan
 
     def register_callbacks(self):
         self.register_event_callback(event_key='anomaly', callback=self.planner)     # LINK <eventTrigger> anomaly

@@ -15,7 +15,7 @@ except (ValueError, ImportError):
     from messages import *
 
 #<!-- cc_include START--!>
-# user includes here
+import json
 #<!-- cc_include END--!>
 
 #<!-- cc_code START--!>
@@ -43,7 +43,8 @@ class Monitor(Node):
         # user code here for monitor_ship
         
         # Fill the class instance properties
-        for key, value in msg.items():
+        msg_dict = json.loads(msg)
+        for key, value in msg_dict.items():
             # Prepend an underscore to match class properties
             underscore_key = f"_{key}"
             if hasattr(_ShipStatus, underscore_key):
@@ -55,11 +56,12 @@ class Monitor(Node):
         # _ShipStatus._heading= "SET VALUE"    # datatype: Float_64
         # _ShipStatus._x= "SET VALUE"    # datatype: Array
         # _ShipStatus._y= "SET VALUE"    # datatype: Array
-
+        self.publish_event(event_key='new_data')
         #<!-- cc_code_monitor_ship END--!>
 
         _success = self.knowledge.write(cls=_ShipStatus)
-        self.publish_event(event_key='new_data')    # LINK <outport> new_data
+        # TODO: Put desired publish event inside user code and uncomment!!
+        #self.publish_event(event_key='new_data')    # LINK <outport> new_data
     # -----------------------------AUTO-GEN SKELETON FOR monitor_weather-----------------------------
     def monitor_weather(self,msg):
         _WeatherCondition = WeatherCondition()
@@ -67,7 +69,8 @@ class Monitor(Node):
         #<!-- cc_code_monitor_weather START--!>
 
         # user code here for monitor_weather
-        for key, value in msg.items():
+        msg_dict = json.loads(msg)
+        for key, value in msg_dict.items():
             # Prepend an underscore to match class properties
             underscore_key = f"_{key}"
             if hasattr(_WeatherCondition, underscore_key):
@@ -79,6 +82,7 @@ class Monitor(Node):
         #<!-- cc_code_monitor_weather END--!>
 
         _success = self.knowledge.write(cls=_WeatherCondition)
+        # TODO: Put desired publish event inside user code and uncomment!!
 
     def register_callbacks(self):
         self.register_event_callback(event_key='ship_status', callback=self.monitor_ship)     # LINK <eventTrigger> ship_status

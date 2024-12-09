@@ -141,7 +141,7 @@ def NTNU():
 
     _isLegit = inport(name="isLegit",type="event data", message=legitimate_message)
     _model = inport(name="Model",type="data", message=model_message)
-    _model_out = outport(name="new_model",type="data event", message=model_message)
+    _model_out = outport(name="new_model",type="event", message=model_message)
 
     execute.addFeature(_isLegit)
     execute.addFeature(_model)
@@ -188,7 +188,7 @@ def NTNU():
     # XEON PROCESSOR CONNTECTION
     MIPSCapacity = characteristic(name="MIPSCapacity",value=1000.0,dataType="MIPS")
     I1 = port(name="I1",type="event data")
-    laptop_xeon1 = processor(name="xeon1",propertyList=[MIPSCapacity],featureList=[I1],IP="192.168.0.117")
+    laptop_xeon1 = processor(name="xeon1",propertyList=[MIPSCapacity],featureList=[I1],IP="localhost")
     laptop_xeon1.runs_rap_backbone = True  # RUNS THE RoboSAPIENS Adaptive Platform backbone
     #laptop_xeon2 = processor(name="xeon2", propertyList=[MIPSCapacity], featureList=[I1])
 

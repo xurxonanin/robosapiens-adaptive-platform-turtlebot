@@ -1,5 +1,5 @@
 import numpy
-from aux_fuctions import *
+from .aux_fuctions import *
 
 class ShipModel_M1:
     def __init__(self):
