@@ -42,6 +42,12 @@ eventIn:
 
 eventOut:
   properties:
+    - property:
+        type: "plan"
+        name: "new_plan"
+        class: "-"
+        topic: "/new_plan"
+        QoS: 10
 
 
 mqtt_broker: "localhost"

@@ -23,7 +23,7 @@ eventIn:
   properties:
     - property:
         type: "event"
-        name: "Scan"
+        name: "/Scan"
         class: "-"
         topic: "/Scan"
         QoS: 10

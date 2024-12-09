@@ -50,7 +50,7 @@ eventOut:
   properties:
     - property:
         type: "event"
-        name: "spin_config"
+        name: "/spin_config"
         class: "-"
         topic: "/spin_config"
         QoS: 10

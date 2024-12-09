@@ -164,7 +164,7 @@ class Plan(Node):
             new_plan = False
 
         if new_plan:
-            self.event_handler.send("new_plan")
+            self.publish_event("new_plan")
             self.knowledge.write("directions", json.dumps({'commands': directions, 'period': 8}))
             self.logger.info(f"Stored planned action: {directions}")
         #<!-- cc_code_planner END--!>
