@@ -1,7 +1,7 @@
-from NTNU.Realization.ManagingSystem.Nodes.monitor.monitor import Monitor
-from NTNU.Realization.ManagingSystem.Nodes.analysis.analysis import Analysis
-from NTNU.Realization.ManagingSystem.Nodes.plan.plan import Plan
-from NTNU.Realization.ManagingSystem.Nodes.execute.execute import Execute
+from NTNU.Realization.ManagingSystem.Nodes.Monitor.Monitor import Monitor
+from NTNU.Realization.ManagingSystem.Nodes.Analysis.Analysis import Analysis
+from NTNU.Realization.ManagingSystem.Nodes.Plan.Plan import Plan
+from NTNU.Realization.ManagingSystem.Nodes.Execute.Execute import Execute
 import time
 
 _Monitor = Monitor("../Realization/ManagingSystem/Nodes/Monitor/config.yaml")
