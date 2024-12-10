@@ -38,7 +38,7 @@ except:
 
 # 6. GENERATE SWC MAIN FILE FOR THE IDENTIFIED PROCESSOR BINDINGS
 try:
-    swc2main(system=design.systems[0],package=packageName,prefix="",path="Resources")
+    swc2main(system=design.systems[0],package=packageName,prefix=None,path="Resources")
 except:
     print("Failed to generate the software component main file for the given platforms")
 

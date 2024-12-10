@@ -4,10 +4,10 @@ from NTNU.Realization.ManagingSystem.Nodes.plan.plan import Plan
 from NTNU.Realization.ManagingSystem.Nodes.execute.execute import Execute
 import time
 
-_Monitor = Monitor("../Realization/ManagingSystem/Nodes/monitor/config.yaml")
-_Analysis = Analysis("../Realization/ManagingSystem/Nodes/analysis/config.yaml")
-_Plan = Plan("../Realization/ManagingSystem/Nodes/plan/config.yaml")
-_Execute = Execute("../Realization/ManagingSystem/nodes/Execute/config.yaml")
+_Monitor = Monitor("../Realization/ManagingSystem/Nodes/Monitor/config.yaml")
+_Analysis = Analysis("../Realization/ManagingSystem/Nodes/Analysis/config.yaml")
+_Plan = Plan("../Realization/ManagingSystem/Nodes/Plan/config.yaml")
+_Execute = Execute("../Realization/ManagingSystem/Nodes/Execute/config.yaml")
 
 _Monitor.register_callbacks()
 _Analysis.register_callbacks()
