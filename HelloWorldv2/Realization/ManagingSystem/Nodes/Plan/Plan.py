@@ -7,11 +7,13 @@
 # * permission of Bert Van Acker
 # **********************************************************************************
 from rpio.clientLibraries.rpclpy.node import Node
+import time
+
 try:
     from .messages import *
 except (ValueError, ImportError):
     from messages import *
-import time
+
 #<!-- cc_include START--!>
 from fractions import Fraction
 try:
@@ -127,14 +129,13 @@ class Plan(Node):
 
     # -----------------------------AUTO-GEN SKELETON FOR planner-----------------------------
     def planner(self,msg):
-        _NewPlanMessage = NewPlanMessage()
+        laser_scan = self.knowledge.read("laser_scan",queueSize=1)
         _Direction = Direction()
 
         #<!-- cc_code_planner START--!>
 
         # user code here for planner
 
-        _NewPlanMessage._NewPlan= "SET VALUE"    # datatype: Boolean
         _Direction._omega= "SET VALUE"    # datatype: Float_64
         _Direction._duration= "SET VALUE"    # datatype: Float_64
 
@@ -144,8 +145,8 @@ class Plan(Node):
         # lidar_mask = pickle.load(self.knowledge.read("lidar_mask"))
 
         #this part of code must be placed in analyse but I cannot retrieve lidar_mask for now
-        lidar_data = self.knowledge.read("laser_scan")
-        self._scans.append(lidar_data)
+        # lidar_data = self.knowledge.read("laser_scan")
+        self._scans.append(laser_scan)
         prob_lidar_mask = next(self._sliding_prob_lidar_masks)
         prob_lidar_mask = prob_lidar_mask.rotate(-Fraction(1, 2))
         lidar_mask = (prob_lidar_mask >= OCCLUSION_THRESHOLD)
@@ -173,17 +174,17 @@ class Plan(Node):
             new_plan = False
 
         if new_plan:
-            self.event_handler.send("new_plan")
+            self.publish_event("new_plan")
             self.knowledge.write("directions", json.dumps({'commands': directions, 'period': 8}))
             self.logger.info(f"Stored planned action: {directions}")
-        #<!-- cc_code_planner END--!>
+            #<!-- cc_code_planner END--!>
 
-        # _success = self.knowledge.write(cls=_NewPlanMessage)
-        # _success = self.knowledge.write(cls=_Direction)
+        _success = self.knowledge.write(cls=_Direction)
+        # TODO: Put desired publish event inside user code and uncomment!!
+        #self.publish_event(event_key='new_plan')    # LINK <outport> new_plan
 
     def register_callbacks(self):
         self.register_event_callback(event_key='anomaly', callback=self.planner)     # LINK <eventTrigger> anomaly
-        # self.register_event_callback(event_key='anomaly', callback=self.planner)        # LINK <inport> anomaly
 
 def main(args=None):
 

@@ -9,15 +9,15 @@ logger:
 
 knowledgeIn:
   properties:
+    - property:
+        type: "data"
+        name: "laser_scan"
+        class: "laser_scan"
+        topic: "/laser_scan"
+        QoS: 10
 
 knowledgeOut:
   properties:
-    - property:
-        type: "data"
-        name: "new_plan"
-        class: "new_plan"
-        topic: "/new_plan"
-        QoS: 10
     - property:
         type: "data"
         name: "direction"
@@ -33,18 +33,18 @@ eventIn:
         class: "-"
         topic: "/anomaly"
         QoS: 10
-    - property:
-        type: "event"
-        name: "anomaly"
-        class: "-"
-        topic: "/anomaly"
-        QoS: 10
 
 eventOut:
   properties:
+    - property:
+        type: "event"
+        name: "new_plan"
+        class: "-"
+        topic: "/new_plan"
+        QoS: 10
 
 
-mqtt_broker: "192.168.56.1"
+mqtt_broker: "localhost"
 mqtt_port: 1883
 
 mqtt_subscribe_topics:
@@ -53,7 +53,7 @@ mqtt_subscribe_topics:
 mqtt_publish_topics:
   - "monitor/event"
 
-redis_host: "192.168.56.1"
+redis_host: "localhost"
 redis_port: 6379
 
 logging:
@@ -63,6 +63,6 @@ logging:
 
 knowledge_config:
   storage_type: "global"
-  redis_host: "192.168.56.1"
+  redis_host: "localhost"
   redis_port: 6379
   redis_db: 0

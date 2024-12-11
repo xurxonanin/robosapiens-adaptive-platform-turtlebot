@@ -7,11 +7,13 @@
 # * permission of Bert Van Acker
 # **********************************************************************************
 from rpio.clientLibraries.rpclpy.node import Node
+import time
+
 try:
     from .messages import *
 except (ValueError, ImportError):
     from messages import *
-import time
+
 #<!-- cc_include START--!>
 # user includes here
 #<!-- cc_include END--!>
@@ -42,15 +44,16 @@ class Monitor(Node):
 
         _LaserScan._ranges= "SET VALUE"    # datatype: Array
         _LaserScan._angle_increment= "SET VALUE"    # datatype: Float_64
-
+        self.publish_event(event_key='new_data')
+        self.knowledge.write("laser_scan", msg)
         #<!-- cc_code_monitor_data END--!>
 
-        # _success = self.knowledge.write(cls=_LaserScan)
-        self.knowledge.write("laser_scan",msg)
-        self.publish_event(event_key='new_data')    # LINK <outport> new_data
+        _success = self.knowledge.write(cls=_LaserScan)
+        # TODO: Put desired publish event inside user code and uncomment!!
+        #self.publish_event(event_key='new_data')    # LINK <outport> new_data
 
     def register_callbacks(self):
-        self.register_event_callback(event_key='/Scan', callback=self.monitor_data)     # LINK <eventTrigger> Scan
+        self.register_event_callback(event_key='/Scan', callback=self.monitor_data)     # LINK <eventTrigger> /Scan
 
 def main(args=None):
 

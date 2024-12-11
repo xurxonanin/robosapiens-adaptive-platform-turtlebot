@@ -74,7 +74,7 @@ def HelloWorld_v2():
     monitor.addFeature(_laserScan)
     monitor.addFeature(_new_data_out)
 
-    monitor_data = thread(name="monitor_data",featureList=[_laserScan, _new_data_out],eventTrigger='Scan')
+    monitor_data = thread(name="monitor_data",featureList=[_laserScan, _new_data_out],eventTrigger='/Scan')
     monitor.addThread(monitor_data)
 
     #-ANALYSIS-
@@ -94,15 +94,15 @@ def HelloWorld_v2():
     plan = process(name="Plan", description="plan component")
 
     #TODO: define input
-    _anomaly_in = inport(name="anomaly",type="event", message=anomaly_message)
-    _plan_out = outport(name="new_plan",type="data", message=new_plan_message)
+    _laserScan_in = inport(name="laser_scan",type="data", message=laser_scan)
+    _plan_out = outport(name="new_plan",type="event", message=new_plan_message)
     _diraction_out = outport(name="direction",type="data", message=direction)
 
-    plan.addFeature(_anomaly_in)
+    plan.addFeature(_laserScan_in)
     plan.addFeature(_plan_out)
     plan.addFeature(_diraction_out)
 
-    planner = thread(name="planner",featureList=[_anomaly_in, _plan_out, _diraction_out],eventTrigger='anomaly')
+    planner = thread(name="planner",featureList=[_laserScan_in, _plan_out, _diraction_out],eventTrigger='anomaly')
     plan.addThread(planner)
 
     #-LEGITIMATE-
@@ -114,7 +114,7 @@ def HelloWorld_v2():
     _new_plan_in = inport(name="new_plan",type="event", message=direction)
     _isLegit = inport(name="isLegit",type="event data", message=legitimate_message)
     _directions = inport(name="directions",type="data", message=direction)
-    _directions_out = outport(name="spin_config",type="data event", message=direction)
+    _directions_out = outport(name="/spin_config",type="data event", message=direction)
 
     execute.addFeature(_new_plan_in)
     execute.addFeature(_isLegit)
@@ -162,7 +162,7 @@ def HelloWorld_v2():
     # XEON PROCESSOR CONNTECTION
     MIPSCapacity = characteristic(name="MIPSCapacity",value=1000.0,dataType="MIPS")
     I1 = port(name="I1",type="event data")
-    laptop_xeon1 = processor(name="xeon1",propertyList=[MIPSCapacity],featureList=[I1],IP="192.168.56.1")
+    laptop_xeon1 = processor(name="xeon1",propertyList=[MIPSCapacity],featureList=[I1],IP="localhost")
     laptop_xeon1.runs_rap_backbone= True    #RUNS THE RoboSAPIENS Adaptive Platform backbone
 
 

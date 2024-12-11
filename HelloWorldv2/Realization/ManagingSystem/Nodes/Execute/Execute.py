@@ -6,16 +6,16 @@
 # * RAP R&D concepts can not be copied and/or distributed without the express
 # * permission of Bert Van Acker
 # **********************************************************************************
-import json
-
 from rpio.clientLibraries.rpclpy.node import Node
+import time
+
 try:
     from .messages import *
 except (ValueError, ImportError):
     from messages import *
-import time
+
 #<!-- cc_include START--!>
-# user includes here
+import json
 #<!-- cc_include END--!>
 
 #<!-- cc_code START--!>
@@ -43,11 +43,13 @@ class Execute(Node):
         #<!-- cc_code_executer START--!>
 
         # user code here for executer
+        self.publish_event(event_key='/spin_config',message=json.dumps(directions))    # LINK <outport> spin_config
 
-
+        # self.publish_event(event_key='/spin_config', message=_Direction)
         #<!-- cc_code_executer END--!>
 
-        self.publish_event(event_key='/spin_config',message=json.dumps(directions))    # LINK <outport> spin_config
+        # TODO: Put desired publish event inside user code and uncomment!!
+        #self.publish_event(event_key='/spin_config',message=_Direction)    # LINK <outport> /spin_config
 
     def register_callbacks(self):
         self.register_event_callback(event_key='new_plan', callback=self.executer)        # LINK <inport> new_plan

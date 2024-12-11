@@ -7,11 +7,13 @@
 # * permission of Bert Van Acker
 # **********************************************************************************
 from rpio.clientLibraries.rpclpy.node import Node
+import time
+
 try:
     from .messages import *
 except (ValueError, ImportError):
     from messages import *
-import time
+
 #<!-- cc_include START--!>
 from fractions import Fraction
 try:
@@ -126,7 +128,8 @@ class Analysis(Node):
 
         #<!-- cc_code_analyse_scan_data END--!>
 
-        # self.publish_event(event_key='anomaly')    # LINK <outport> anomaly
+        # TODO: Put desired publish event inside user code and uncomment!!
+        #self.publish_event(event_key='anomaly')    # LINK <outport> anomaly
 
     def register_callbacks(self):
         self.register_event_callback(event_key='new_data', callback=self.analyse_scan_data)     # LINK <eventTrigger> new_data
