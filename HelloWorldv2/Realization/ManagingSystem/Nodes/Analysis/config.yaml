@@ -38,7 +38,7 @@ eventOut:
         QoS: 10
 
 
-mqtt_broker: "192.168.0.191"
+mqtt_broker: "192.168.0.161"
 mqtt_port: 1883
 
 mqtt_subscribe_topics:
@@ -47,7 +47,7 @@ mqtt_subscribe_topics:
 mqtt_publish_topics:
   - "monitor/event"
 
-redis_host: "192.168.0.191"
+redis_host: "192.168.0.161"
 redis_port: 6379
 
 logging:
@@ -57,6 +57,6 @@ logging:
 
 knowledge_config:
   storage_type: "global"
-  redis_host: "192.168.0.191"
+  redis_host: "192.168.0.161"
   redis_port: 6379
   redis_db: 0
