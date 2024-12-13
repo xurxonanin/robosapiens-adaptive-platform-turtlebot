@@ -15,7 +15,10 @@ except (ValueError, ImportError):
     from messages import *
 
 #<!-- cc_include START--!>
-import NTNU.Realization.ManagingSystem.Nodes.Analysis.ship_maneuvering_model as ship_maneuvering_model
+try:
+    import NTNU.Realization.ManagingSystem.Nodes.Analysis.ship_maneuvering_model as ship_maneuvering_model
+except(ValueError, ImportError):
+    import ship_maneuvering_model as ship_maneuvering_model
 import numpy as np
 #<!-- cc_include END--!>
 

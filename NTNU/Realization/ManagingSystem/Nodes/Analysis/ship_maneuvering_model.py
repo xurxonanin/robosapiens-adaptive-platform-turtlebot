@@ -1,6 +1,8 @@
 import numpy
-from .aux_fuctions import *
-
+try:
+    from .aux_fuctions import *
+except(ValueError, ImportError):
+    from aux_fuctions import *
 class ShipModel_M1:
     def __init__(self):
         # Ship parameters

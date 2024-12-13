@@ -12,5 +12,5 @@ COPY config.yaml ./
 COPY messages.py ./
 COPY . .
 
-CMD ["python3", "legitimate.py"]
+CMD ["python3", "Legitimate.py"]
 
