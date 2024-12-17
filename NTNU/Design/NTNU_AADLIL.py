@@ -188,7 +188,7 @@ def NTNU():
     # XEON PROCESSOR CONNTECTION
     MIPSCapacity = characteristic(name="MIPSCapacity",value=1000.0,dataType="MIPS")
     I1 = port(name="I1",type="event data")
-    laptop_xeon1 = processor(name="xeon1",propertyList=[MIPSCapacity],featureList=[I1],IP="192.168.0.191")
+    laptop_xeon1 = processor(name="xeon1",propertyList=[MIPSCapacity],featureList=[I1],IP="192.168.0.172")
     laptop_xeon1.runs_rap_backbone = True  # RUNS THE RoboSAPIENS Adaptive Platform backbone
     #laptop_xeon2 = processor(name="xeon2", propertyList=[MIPSCapacity], featureList=[I1])
 
@@ -241,6 +241,7 @@ def NTNU():
     return adaptiveSystem
 
 NTNUDesign=NTNU()
+NTNUDesign.object2json(fileName="design.json")
 
 
 
