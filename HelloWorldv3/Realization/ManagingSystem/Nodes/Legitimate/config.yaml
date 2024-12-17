@@ -12,30 +12,12 @@ knowledgeIn:
 
 knowledgeOut:
   properties:
-    - property:
-        type: "data"
-        name: "laser_scan"
-        class: "laser_scan"
-        topic: "/laser_scan"
-        QoS: 10
 
 eventIn:
   properties:
-    - property:
-        type: "event"
-        name: "/Scan"
-        class: "-"
-        topic: "/Scan"
-        QoS: 10
 
 eventOut:
   properties:
-    - property:
-        type: "event"
-        name: "new_data"
-        class: "-"
-        topic: "/new_data"
-        QoS: 10
 
 
 mqtt_broker: "192.168.0.172"

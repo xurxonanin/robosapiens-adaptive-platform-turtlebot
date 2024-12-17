@@ -9,32 +9,50 @@ logger:
 
 knowledgeIn:
   properties:
+    - property:
+        type: "data"
+        name: "isLegit"
+        class: "isLegit"
+        topic: "/isLegit"
+        QoS: 10
+    - property:
+        type: "data"
+        name: "directions"
+        class: "directions"
+        topic: "/directions"
+        QoS: 10
 
 knowledgeOut:
   properties:
     - property:
         type: "data"
-        name: "laser_scan"
-        class: "laser_scan"
-        topic: "/laser_scan"
+        name: "/spin_config"
+        class: "/spin_config"
+        topic: "//spin_config"
         QoS: 10
 
 eventIn:
   properties:
     - property:
         type: "event"
-        name: "/Scan"
+        name: "new_plan"
         class: "-"
-        topic: "/Scan"
+        topic: "/new_plan"
+        QoS: 10
+    - property:
+        type: "event"
+        name: "isLegit"
+        class: "-"
+        topic: "/isLegit"
         QoS: 10
 
 eventOut:
   properties:
     - property:
         type: "event"
-        name: "new_data"
+        name: "/spin_config"
         class: "-"
-        topic: "/new_data"
+        topic: "//spin_config"
         QoS: 10
 
 

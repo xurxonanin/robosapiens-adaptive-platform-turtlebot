@@ -9,9 +9,6 @@ logger:
 
 knowledgeIn:
   properties:
-
-knowledgeOut:
-  properties:
     - property:
         type: "data"
         name: "laser_scan"
@@ -19,22 +16,31 @@ knowledgeOut:
         topic: "/laser_scan"
         QoS: 10
 
+knowledgeOut:
+  properties:
+    - property:
+        type: "data"
+        name: "direction"
+        class: "direction"
+        topic: "/direction"
+        QoS: 10
+
 eventIn:
   properties:
     - property:
         type: "event"
-        name: "/Scan"
+        name: "anomaly"
         class: "-"
-        topic: "/Scan"
+        topic: "/anomaly"
         QoS: 10
 
 eventOut:
   properties:
     - property:
         type: "event"
-        name: "new_data"
+        name: "new_plan"
         class: "-"
-        topic: "/new_data"
+        topic: "/new_plan"
         QoS: 10
 
 
