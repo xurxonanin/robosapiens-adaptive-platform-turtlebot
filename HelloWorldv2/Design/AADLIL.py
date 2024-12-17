@@ -162,7 +162,7 @@ def HelloWorld_v2():
     # XEON PROCESSOR CONNTECTION
     MIPSCapacity = characteristic(name="MIPSCapacity",value=1000.0,dataType="MIPS")
     I1 = port(name="I1",type="event data")
-    laptop_xeon1 = processor(name="xeon1",propertyList=[MIPSCapacity],featureList=[I1],IP="192.168.0.161")
+    laptop_xeon1 = processor(name="xeon1",propertyList=[MIPSCapacity],featureList=[I1],IP="192.168.0.172")
     laptop_xeon1.runs_rap_backbone= True    #RUNS THE RoboSAPIENS Adaptive Platform backbone
 
 
@@ -213,7 +213,7 @@ def HelloWorld_v2():
 
     return adaptiveSystem
 
-#HelloWorldDesign=HelloWorld()
-#HelloWorldDesign.object2json(fileName="design.json")
+HelloWorldDesign=HelloWorld_v2()
+HelloWorldDesign.object2json(fileName="design.json")
 
 
