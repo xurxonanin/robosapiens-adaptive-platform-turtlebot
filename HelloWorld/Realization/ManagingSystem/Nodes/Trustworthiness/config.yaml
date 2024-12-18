@@ -35,18 +35,37 @@ eventIn:
         QoS: 10
     - property:
         type: "event"
-        name: "anomaly"
+        name: "new_plan"
         class: "-"
-        topic: "/anomaly"
+        topic: "/new_plan"
         QoS: 10
+    - property:
+        type: "event"
+        name: "isLegit"
+        class: "-"
+        topic: "/isLegit"
+        QoS: 10
+    - property:
+        type: "event"
+        name: "/spin_config"
+        class: "-"
+        topic: "/spin_config"
+        QoS: 10
+    - property:
+        type: "event"
+        name: "maple"
+        class: "-"
+        topic: "/maple"
+        QoS: 10
+
 
 eventOut:
   properties:
     - property:
-        type: "plan"
-        name: "new_plan"
+        type: "stage"
+        name: "stage"
         class: "-"
-        topic: "/new_plan"
+        topic: "/stage"
         QoS: 10
 
 
