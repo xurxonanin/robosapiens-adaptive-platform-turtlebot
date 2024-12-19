@@ -56,7 +56,7 @@ app.title = "MAPE-K Dashboard"
 
 # Layout
 app.layout = html.Div([
-    html.H1("MAPE-K Phases Timeline On PC", style={"textAlign": "center"}),
+    html.H1("MAPE-K Phases Timeline", style={"textAlign": "center"}),
     dcc.Graph(id="gantt-chart"),
     dcc.Interval(
         id='interval-component',

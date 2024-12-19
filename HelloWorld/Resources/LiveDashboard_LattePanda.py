@@ -9,7 +9,7 @@ from datetime import datetime
 import pandas as pd
 
 # Path to the log file
-LOG_FILE = 'MAPE_test.log'
+LOG_FILE = 'MAPE_test_lattepanda.log'
 
 # Shared state for phases
 phases = []
@@ -56,7 +56,7 @@ app.title = "MAPE-K Dashboard"
 
 # Layout
 app.layout = html.Div([
-    html.H1("MAPE-K Phases Timeline On PC", style={"textAlign": "center"}),
+    html.H1("MAPE-K Phases Timeline on The Latte Panda", style={"textAlign": "center"}),
     dcc.Graph(id="gantt-chart"),
     dcc.Interval(
         id='interval-component',
@@ -108,7 +108,7 @@ def update_gantt_chart(n_intervals):
         ))
 
     fig.update_layout(
-        title="MAPE-K Phases Timeline (Last 10 Seconds)",
+        title="MAPE-K Phases Timeline (Last 10 Seconds) On pc",
         xaxis_title="Time (seconds)",
         yaxis_title="Phases",
         barmode="overlay",
@@ -120,4 +120,4 @@ def update_gantt_chart(n_intervals):
 
 # Run the app
 if __name__ == "__main__":
-    app.run_server(debug=True)
+    app.run_server(debug=True, port=8051)
