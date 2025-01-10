@@ -153,7 +153,7 @@ class Plan(Node):
 
             occlusion_angles = calculate_lidar_occlusion_rotation_angles(lidar_mask)
             directions = occlusion_angles_to_rotations(occlusion_angles)
-            self.knowledge.write("directions", pickle.dumps(directions))
+            self.knowledge.write("directions", json.dumps(directions))
             self.logger.info(f"- Plan action written to knowledge :{directions}")
             new_plan = True
         except:
@@ -164,6 +164,9 @@ class Plan(Node):
             new_plan = False
 
         if new_plan:
+            for i in range(10):
+                self.logger.info("Planning")
+                time.sleep(0.1)
             self.publish_event("new_plan")
             self.knowledge.write("directions", json.dumps({'commands': directions, 'period': 8}))
             self.logger.info(f"Stored planned action: {directions}")

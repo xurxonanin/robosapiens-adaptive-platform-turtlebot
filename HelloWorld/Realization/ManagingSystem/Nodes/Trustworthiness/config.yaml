@@ -9,20 +9,20 @@ logger:
 
 knowledgeIn:
   properties:
-    - property:
-        type: "data"
-        name: "ShipStatus"
-        class: "ShipStatus"
-        topic: "/ShipStatus"
-        QoS: 10
 
 knowledgeOut:
   properties:
     - property:
         type: "data"
-        name: "Model"
-        class: "Model"
-        topic: "/Model"
+        name: "new_plan"
+        class: "new_plan"
+        topic: "/new_plan"
+        QoS: 10
+    - property:
+        type: "data"
+        name: "direction"
+        class: "direction"
+        topic: "/direction"
         QoS: 10
 
 eventIn:
@@ -33,14 +33,39 @@ eventIn:
         class: "-"
         topic: "/anomaly"
         QoS: 10
-
-eventOut:
-  properties:
     - property:
         type: "event"
         name: "new_plan"
         class: "-"
         topic: "/new_plan"
+        QoS: 10
+    - property:
+        type: "event"
+        name: "isLegit"
+        class: "-"
+        topic: "/isLegit"
+        QoS: 10
+    - property:
+        type: "event"
+        name: "/spin_config"
+        class: "-"
+        topic: "/spin_config"
+        QoS: 10
+    - property:
+        type: "event"
+        name: "maple"
+        class: "-"
+        topic: "/maple"
+        QoS: 10
+
+
+eventOut:
+  properties:
+    - property:
+        type: "stage"
+        name: "stage"
+        class: "-"
+        topic: "/stage"
         QoS: 10
 
 
@@ -48,10 +73,10 @@ mqtt_broker: "localhost"
 mqtt_port: 1883
 
 mqtt_subscribe_topics:
-  - "/Scan"
+  - "anomaly"
 
 mqtt_publish_topics:
-  - "monitor/event"
+  - "new_plan"
 
 redis_host: "localhost"
 redis_port: 6379

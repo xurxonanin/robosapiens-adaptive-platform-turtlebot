@@ -15,9 +15,22 @@ knowledgeOut:
 
 eventIn:
   properties:
+    - property:
+        type: "event"
+        name: "new_plan"
+        class: "-"
+        topic: "/new_plan"
+        QoS: 10
+
 
 eventOut:
   properties:
+    - property:
+        type: "legitimate"
+        name: "isLegit"
+        class: "-"
+        topic: "/isLegit"
+        QoS: 10
 
 
 mqtt_broker: "localhost"

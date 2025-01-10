@@ -10,7 +10,7 @@ from rpio.clientLibraries.rpclpy.node import Node
 from .messages import *
 import time
 #<!-- cc_include START--!>
-# user includes here
+import json
 #<!-- cc_include END--!>
 
 #<!-- cc_code START--!>
@@ -28,7 +28,25 @@ class Legitimate(Node):
         #<!-- cc_init START--!>
         # user includes here
         #<!-- cc_init END--!>
+    # -----------------------------AUTO-GEN SKELETON FOR executer-----------------------------
+    def legitimate(self,msg):
+        isLegit = self.knowledge.read("isLegit",queueSize=1)
+        directions = self.knowledge.read("directions",queueSize=1)
+        _Direction = Direction()
 
+        #<!-- cc_code_executer START--!>
+
+        # user code here for executer
+
+
+        #<!-- cc_code_executer END--!>
+        for i in range(5):
+            self.logger.info("Legitimating")
+            time.sleep(0.1)
+        self.publish_event(event_key='isLegit')    # LINK <outport> spin_config
+
+    def register_callbacks(self):
+        self.register_event_callback(event_key='new_plan', callback=self.legitimate)        # LINK <inport> new_plan
 
 def main(args=None):
 

@@ -99,12 +99,17 @@ def astar(start, end, obstacles):
 sim = TurtleBotSim()
 root = tk.Tk()
 root.title("TurtleBot4 Simulation Dashboard")
+# Configure the main window grid
+root.rowconfigure(0, weight=1)  # Row for the canvas
+root.rowconfigure(1, weight=0)  # Row for buttons
+root.columnconfigure(0, weight=1)  # Single column layout
 
 # Create Matplotlib Figure
 fig, (ax, ax_lidar) = plt.subplots(1, 2, figsize=(10, 5))
 ax_lidar = plt.subplot(1, 2, 2, polar=True)
 canvas = FigureCanvasTkAgg(fig, master=root)
-canvas.get_tk_widget().pack()
+canvas.get_tk_widget().grid(row=0, column=0, sticky="nsew")  # Use grid instead of pack
+
 
 # Update Map Visualization
 def update_map():
@@ -136,7 +141,7 @@ def update_map():
     ax_lidar.plot(angles, sim.lidar_data, 'r-')
     ax_lidar.set_title("Lidar Data")
     ax_lidar.set_ylim([0, 10])
-    
+
     canvas.draw()
 
 # Click event to navigate TurtleBot
@@ -157,8 +162,8 @@ def toggle_lidar():
     update_map()
 
 lidar_button = tk.Button(root, text="Toggle Lidar Occlusion", command=toggle_lidar)
-lidar_button.pack()
-
+# lidar_button.pack()
+lidar_button.grid(row=1, column=0, sticky="ew", padx=300, pady=5)
 # Lidar Toggle Button
 def toggle_NAV2():
     sim.standard_navigation = not sim.standard_navigation
@@ -167,8 +172,8 @@ def toggle_NAV2():
     update_map()
 
 NAV2_button = tk.Button(root, text="Toggle NAV2", command=toggle_NAV2)
-NAV2_button.pack()
-
+# NAV2_button.pack()
+NAV2_button.grid(row=2, column=0, sticky="ew", padx=300, pady=5)  # Expand horizontally
 # MQTT Spin Command Listener
 def on_message(client, userdata, message):
     try:

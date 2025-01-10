@@ -43,7 +43,9 @@ class Execute(Node):
 
 
         #<!-- cc_code_executer END--!>
-
+        for i in range(3):
+            self.logger.info("Executing")
+            time.sleep(0.1)
         self.publish_event(event_key='/spin_config',message=json.dumps(directions))    # LINK <outport> spin_config
 
     def register_callbacks(self):
