@@ -162,14 +162,14 @@ def HelloWorld_v2():
     # XEON PROCESSOR CONNTECTION
     MIPSCapacity = characteristic(name="MIPSCapacity",value=1000.0,dataType="MIPS")
     I1 = port(name="I1",type="event data")
-    laptop_xeon1 = processor(name="xeon1",propertyList=[MIPSCapacity],featureList=[I1],IP="192.168.0.172")
+    laptop_xeon1 = processor(name="xeon1",propertyList=[MIPSCapacity],featureList=[I1],IP="192.168.0.53")
     laptop_xeon1.runs_rap_backbone= True    #RUNS THE RoboSAPIENS Adaptive Platform backbone
 
 
     # RPI PROCESSOR CONNTECTION
     MIPSCapacity = characteristic(name="MIPSCapacity",value=2000.0,dataType="MIPS")
     I2 = port(name="I2",type="event data")
-    RPI = processor(name="Raspberry Pi 4B",propertyList=[MIPSCapacity],featureList=[I2],IP="192.168.56.5")
+    RPI = processor(name="Raspberry Pi 4B",propertyList=[MIPSCapacity],featureList=[I2],IP="192.168.0.53")
 
     # WIFI CONNTECTION
     BandWidthCapacity = characteristic(name="BandWidthCapacity",value=100.0,dataType="Mbytesps")
