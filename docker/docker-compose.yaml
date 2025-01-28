@@ -12,6 +12,10 @@ services:
       - vol-emqx-etc:/opt/emqx/etc
       - vol-emqx-log:/opt/emqx/log
     network_mode: host
+  redis:
+    image: redis:latest
+    network_mode: host
+    restart: always
   rapdev:
     command: sleep infinity
     build:

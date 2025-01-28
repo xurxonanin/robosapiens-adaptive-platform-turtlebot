@@ -10,5 +10,7 @@ then
   source /opt/setup.bash
 fi
 
+alias python="python3"
+
 # Execute the command passed into this entrypoint
 exec "$@"

@@ -96,17 +96,23 @@ services:
               capabilities: [ gpu ]
     environment:
       - NVIDIA_DRIVER_CAPABILITIES=all
-  simdeploynogpu:
+  simdeploynogputb4:
     extends: deploynogpu
     command: ros2 launch demo_bringup sim_demo_tb4.launch.py
-  simdeploymesa:
+  simdeploymesatb4:
     extends: deploymesa
     command: ros2 launch demo_bringup sim_demo_tb4.launch.py
-  simdeploynvidia:
+  simdeploynvidiatb4:
     extends: deploynvidia
     command: ros2 launch demo_bringup sim_demo_tb4.launch.py
   simdeploymesatb3:
     extends: deploymesa
+    command: ros2 launch demo_bringup sim_demo_tb3.launch.py
+  simdeploynvidiatb3:
+    extends: deploynvidia
+    command: ros2 launch demo_bringup sim_demo_tb3.launch.py
+  simdeploynogputb3:
+    extends: deploynogpu
     command: ros2 launch demo_bringup sim_demo_tb3.launch.py
   rvizlivenvidia:
     extends: devnvidia
