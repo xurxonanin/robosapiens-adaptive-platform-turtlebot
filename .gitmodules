@@ -1,0 +1,3 @@
+[submodule "3rdParties/rpio-examples"]
+	path = 3rdParties/rpio-examples
+	url = git@github.com:BertVanAcker/rpio-examples.git
