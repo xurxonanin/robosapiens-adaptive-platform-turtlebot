@@ -1,6 +1,6 @@
-[submodule "3rdParties/rpio-examples"]
-	path = 3rdParties/rpio-examples
-	url = git@github.com:BertVanAcker/rpio-examples.git
 [submodule "turtlebotrossim/scan_relay_ws/navigation2"]
 	path = turtlebotrossim/scan_relay_ws/navigation2
 	url = git@github.com:ros-navigation/navigation2.git
+[submodule "3rdparties/rpio-examples"]
+	path = 3rdparties/rpio-examples
+	url = git@github.com:BertVanAcker/rpio-examples.git
