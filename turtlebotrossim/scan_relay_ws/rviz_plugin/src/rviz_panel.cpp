@@ -1,6 +1,7 @@
 #include <QVBoxLayout>
 #include <rviz_common/display_context.hpp>
 #include <rviz_plugin/rviz_panel.hpp>
+#include <std_msgs/msg/detail/u_int16_multi_array__struct.hpp>
 
 namespace rviz_panel_tutorial {
 
@@ -9,8 +10,8 @@ DemoPanel::DemoPanel(QWidget *parent) : Panel(parent) {
   // vertical)
   const auto layout = new QVBoxLayout(this);
   // Create a button and a label for the button
-  label_ = new QLabel("[no data]");
-  button_ = new QPushButton("GO!");
+  label_ = new QLabel("[no spin config yet]");
+  button_ = new QPushButton("TB3 Sim Occlusion!");
   // Add those elements to the GUI layout
   layout->addWidget(label_);
   layout->addWidget(button_);
@@ -34,7 +35,8 @@ void DemoPanel::onInitialize() {
   rclcpp::Node::SharedPtr node = node_ptr_->get_raw_node();
 
   // Create a String publisher for the output
-  publisher_ = node->create_publisher<std_msgs::msg::String>("/output", 10);
+  publisher_ = node->create_publisher<std_msgs::msg::UInt16MultiArray>(
+      "/scan_config", 10);
 
   // Create a String subscription and bind it to the topicCallback inside this
   // class.
@@ -52,9 +54,9 @@ void DemoPanel::topicCallback(const std_msgs::msg::String &msg) {
 // When the widget's button is pressed, this callback is triggered,
 // and then we publish a new message on our topic.
 void DemoPanel::buttonActivated() {
-  auto message = std_msgs::msg::String();
-  message.data = "Button clicked!";
-  publisher_->publish(message);
+  auto msg = std_msgs::msg::UInt16MultiArray();
+  msg.data = {0, 270};
+  publisher_->publish(msg);
 }
 
 } // namespace rviz_panel_tutorial

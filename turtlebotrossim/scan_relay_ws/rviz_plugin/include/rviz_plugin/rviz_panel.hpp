@@ -1,5 +1,6 @@
 #pragma once
 
+#include "std_msgs/msg/u_int16_multi_array.hpp"
 #include <QLabel>
 #include <QPushButton>
 #include <rviz_common/panel.hpp>
@@ -18,7 +19,7 @@ public:
 protected:
   std::shared_ptr<rviz_common::ros_integration::RosNodeAbstractionIface>
       node_ptr_;
-  rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;
+  rclcpp::Publisher<std_msgs::msg::UInt16MultiArray>::SharedPtr publisher_;
   rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
 
   void topicCallback(const std_msgs::msg::String &msg);
