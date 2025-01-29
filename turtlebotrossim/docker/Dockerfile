@@ -96,6 +96,7 @@ RUN source /opt/entrypoint.sh\
     && rosdep install -i --from-path demo_bringup --rosdistro humble\
     && rosdep install -i --from-path scan_modifier --rosdistro humble\
     && rosdep install -i --from-path spinning_controller --rosdistro humble\
-    && rosdep install -i --from-path topic_param_bridge --rosdistro humble
+    && rosdep install -i --from-path topic_param_bridge --rosdistro humble \
+    && rosdep install -i --from-path rviz_plugin --rosdistro humble 
 RUN source /opt/entrypoint.sh\
-    && colcon build --packages-select demo_bringup scan_modifier spinning_controller topic_param_bridge
+    && colcon build --packages-select demo_bringup scan_modifier spinning_controller topic_param_bridge rviz_plugin
