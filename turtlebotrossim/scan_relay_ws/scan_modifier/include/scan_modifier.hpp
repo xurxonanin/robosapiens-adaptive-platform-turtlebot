@@ -4,6 +4,7 @@
 #include "sensor_msgs/msg/laser_scan.hpp"
 #include "math_help.hpp"
 #include "std_msgs/msg/u_int16_multi_array.hpp"
+#include <vector>
 
 namespace scan
 {
@@ -23,8 +24,7 @@ namespace scan
     rclcpp::Subscription<sensor_msgs::msg::LaserScan>::SharedPtr scan_sub_;
     rclcpp::Publisher<sensor_msgs::msg::LaserScan>::SharedPtr publisher_;
 
-    uint16_t lidar_filt_upper_; // Initially configured by parameter - otherwise runtime error
-    uint16_t lidar_filt_lower_ = 0;
+    std::vector<std::pair<uint16_t, uint16_t>> lidar_filters_; // Initially configured by parameter - otherwise runtime error
   };
 
 } // namespace scan
