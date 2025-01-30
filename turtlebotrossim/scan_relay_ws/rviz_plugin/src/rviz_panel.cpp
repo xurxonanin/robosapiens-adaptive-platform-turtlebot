@@ -8,7 +8,8 @@ namespace spin_panel
 {
 
   // Function to create a group of radio buttons
-  QGroupBox *createRadioButtonGroup(const QString &title, const QStringList &options, QRadioButton *&selectedButton)
+  template <typename Iterable>
+  QGroupBox *createRadioButtonGroup(const QString &title, const Iterable &options, QRadioButton *&selectedButton)
   {
     QGroupBox *groupBox = new QGroupBox(title);
     QGridLayout *layout = new QGridLayout(groupBox);
@@ -56,11 +57,9 @@ namespace spin_panel
     label_->setReadOnly(true);
     button_ = new QPushButton("Send mocked occlusion");
     bot_variant_selected_ = nullptr;
-    bot_variants_ = createRadioButtonGroup("Select TurtleBot variant",
-                                           {"TurtleBot3 sim", "TurtleBot3 real", "TurtleBot4 sim", "TurtleBot4 real"}, bot_variant_selected_);
+    bot_variants_ = createRadioButtonGroup("Select TurtleBot variant", BOTS, bot_variant_selected_);
     region_variant_selected_ = nullptr;
-    region_variants_ = createRadioButtonGroup("Select region to cover",
-                                              {"Northwest", "Northeast", "Southwest", "Southeast"}, region_variant_selected_);
+    region_variants_ = createRadioButtonGroup("Select region to cover", REGIONS_TEXT, region_variant_selected_);
 
     // Add those elements to the GUI layout
     layout->addWidget(bot_variants_);
@@ -110,7 +109,29 @@ namespace spin_panel
   void SpinPanel::buttonActivated()
   {
     auto msg = std_msgs::msg::UInt16MultiArray();
-    msg.data = {0, 270};
+    auto lidar_samples = 0_u;
+
+    auto buttons = bot_variants_->findChildren<QRadioButton *>();
+    for (int i = 0; i < buttons.size(); ++i)
+    {
+      if (buttons[i]->isChecked())
+      {
+        lidar_samples = LIDAR_SAMPLES[i];
+        break;
+      }
+    }
+
+    buttons = region_variants_->findChildren<QRadioButton *>();
+    for (int i = 0; i < buttons.size(); ++i)
+    {
+      if (buttons[i]->isChecked())
+      {
+        msg.data = {static_cast<uint16_t>(REGIONS_PAIRS[i].first * lidar_samples),
+                    static_cast<uint16_t>(REGIONS_PAIRS[i].second * lidar_samples)};
+        break;
+      }
+    }
+
     publisher_->publish(msg);
   }
 
