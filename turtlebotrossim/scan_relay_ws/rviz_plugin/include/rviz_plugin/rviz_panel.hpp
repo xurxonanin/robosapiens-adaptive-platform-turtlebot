@@ -8,14 +8,14 @@
 #include <std_msgs/msg/string.hpp>
 #include "spin_interfaces/msg/spin_periodic_commands.hpp"
 
-namespace rviz_panel_tutorial
+namespace spin_panel
 {
-  class DemoPanel : public rviz_common::Panel
+  class SpinPanel : public rviz_common::Panel
   {
     Q_OBJECT
   public:
-    explicit DemoPanel(QWidget *parent = 0);
-    ~DemoPanel() override;
+    explicit SpinPanel(QWidget *parent = 0);
+    ~SpinPanel() override;
 
     void onInitialize() override;
 
@@ -33,4 +33,4 @@ namespace rviz_panel_tutorial
   private Q_SLOTS:
     void buttonActivated();
   };
-} // namespace rviz_panel_tutorial
+} // namespace spin_panel

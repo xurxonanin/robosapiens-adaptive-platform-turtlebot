@@ -16,17 +16,17 @@ qt5_wrap_cpp(MOC_FILES
   include/rviz_plugin/rviz_panel.hpp
 )
 
-add_library(demo_panel src/rviz_panel.cpp ${MOC_FILES})
-target_include_directories(demo_panel PUBLIC
+add_library(spin_panel src/rviz_panel.cpp ${MOC_FILES})
+target_include_directories(spin_panel PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
 )
-ament_target_dependencies(demo_panel
+ament_target_dependencies(spin_panel
   pluginlib
   rviz_common
   spin_interfaces
 )
-install(TARGETS demo_panel
+install(TARGETS spin_panel
         EXPORT export_rviz_plugin
         ARCHIVE DESTINATION lib
         LIBRARY DESTINATION lib
@@ -38,7 +38,7 @@ install(DIRECTORY include/
 install(FILES rviz_common_plugins.xml
         DESTINATION share/${PROJECT_NAME}
 )
-install(FILES icons/classes/DemoPanel.png
+install(FILES icons/classes/SpinPanel.png
         DESTINATION share/${PROJECT_NAME}/icons/classes
 )
 ament_export_include_directories(include)

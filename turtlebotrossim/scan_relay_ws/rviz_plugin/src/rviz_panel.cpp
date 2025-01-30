@@ -4,7 +4,7 @@
 #include <rviz_plugin/rviz_panel.hpp>
 #include <std_msgs/msg/detail/u_int16_multi_array__struct.hpp>
 
-namespace rviz_panel_tutorial
+namespace spin_panel
 {
 
   QString toQString(const spin_interfaces::msg::SpinCommand &command)
@@ -24,7 +24,7 @@ namespace rviz_panel_tutorial
     return "SpinPeriodicComands {commands: [" + cmds_list.join(", ") + "], period: " + QString::number(periodic_cmds.period, 'f', 2) + "}";
   }
 
-  DemoPanel::DemoPanel(QWidget *parent) : Panel(parent)
+  SpinPanel::SpinPanel(QWidget *parent) : Panel(parent)
   {
     // Create a label and a button, displayed vertically (the V in VBox means
     // vertical)
@@ -41,12 +41,12 @@ namespace rviz_panel_tutorial
     // so pressing the button results in the buttonActivated callback being
     // called.
     QObject::connect(button_, &QPushButton::released, this,
-                     &DemoPanel::buttonActivated);
+                     &SpinPanel::buttonActivated);
   }
 
-  DemoPanel::~DemoPanel() = default;
+  SpinPanel::~SpinPanel() = default;
 
-  void DemoPanel::onInitialize()
+  void SpinPanel::onInitialize()
   {
     // Access the abstract ROS Node and
     // in the process lock it for exclusive use until the method is done.
@@ -64,26 +64,26 @@ namespace rviz_panel_tutorial
     // class.
     subscription_ = node->create_subscription<spin_interfaces::msg::SpinPeriodicCommands>(
         "/spin_config", 10,
-        std::bind(&DemoPanel::topicCallback, this, std::placeholders::_1));
+        std::bind(&SpinPanel::topicCallback, this, std::placeholders::_1));
   }
 
   // When the subscriber gets a message, this callback is triggered,
   // and then we copy its data into the widget's label
-  void DemoPanel::topicCallback(const spin_interfaces::msg::SpinPeriodicCommands &msg)
+  void SpinPanel::topicCallback(const spin_interfaces::msg::SpinPeriodicCommands &msg)
   {
     label_->setText(toQString(msg));
   }
 
   // When the widget's button is pressed, this callback is triggered,
   // and then we publish a new message on our topic.
-  void DemoPanel::buttonActivated()
+  void SpinPanel::buttonActivated()
   {
     auto msg = std_msgs::msg::UInt16MultiArray();
     msg.data = {0, 270};
     publisher_->publish(msg);
   }
 
-} // namespace rviz_panel_tutorial
+} // namespace spin_panel
 
 #include <pluginlib/class_list_macros.hpp>
-PLUGINLIB_EXPORT_CLASS(rviz_panel_tutorial::DemoPanel, rviz_common::Panel)
+PLUGINLIB_EXPORT_CLASS(spin_panel::SpinPanel, rviz_common::Panel)
