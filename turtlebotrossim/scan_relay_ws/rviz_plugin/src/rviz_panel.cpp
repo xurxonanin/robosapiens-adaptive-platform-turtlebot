@@ -7,6 +7,28 @@
 namespace spin_panel
 {
 
+  // Function to create a group of radio buttons
+  QGroupBox *createRadioButtonGroup(const QString &title, const QStringList &options, QRadioButton *&selectedButton)
+  {
+    QGroupBox *groupBox = new QGroupBox(title);
+    QGridLayout *layout = new QGridLayout(groupBox);
+
+    int row = 0, col = 0;
+    for (const auto &option : options)
+    {
+      QRadioButton *button = new QRadioButton(option);
+      layout->addWidget(button, row, col);
+      if (!selectedButton)
+        selectedButton = button; // Default to first button
+      col = (col + 1) % 2;       // Switch columns
+      if (col == 0)
+        row++; // Move to next row after two items
+    }
+
+    groupBox->setLayout(layout);
+    return groupBox;
+  }
+
   QString toQString(const spin_interfaces::msg::SpinCommand &command)
   {
     return QString("{omega: %1, duration: %2}").arg(command.omega).arg(command.duration);
@@ -32,10 +54,19 @@ namespace spin_panel
     // Create a button and a label for the button
     label_ = new QTextEdit("[no spin config yet]");
     label_->setReadOnly(true);
-    button_ = new QPushButton("TB3 Sim Occlusion!");
+    button_ = new QPushButton("Send mocked occlusion");
+    bot_variant_selected_ = nullptr;
+    bot_variants_ = createRadioButtonGroup("Select TurtleBot variant",
+                                           {"TurtleBot3 sim", "TurtleBot3 real", "TurtleBot4 sim", "TurtleBot4 real"}, bot_variant_selected_);
+    region_variant_selected_ = nullptr;
+    region_variants_ = createRadioButtonGroup("Select region to cover",
+                                              {"Northwest", "Northeast", "Southwest", "Southeast"}, region_variant_selected_);
+
     // Add those elements to the GUI layout
-    layout->addWidget(label_);
+    layout->addWidget(bot_variants_);
+    layout->addWidget(region_variants_);
     layout->addWidget(button_);
+    layout->addWidget(label_);
 
     // Connect the event of when the button is released to our callback,
     // so pressing the button results in the buttonActivated callback being

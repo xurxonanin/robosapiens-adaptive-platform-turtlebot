@@ -3,6 +3,8 @@
 #include "std_msgs/msg/u_int16_multi_array.hpp"
 #include <QTextEdit>
 #include <QPushButton>
+#include <QRadioButton>
+#include <QGroupBox>
 #include <rviz_common/panel.hpp>
 #include <rviz_common/ros_integration/ros_node_abstraction_iface.hpp>
 #include <std_msgs/msg/string.hpp>
@@ -29,6 +31,10 @@ namespace spin_panel
 
     QTextEdit *label_;
     QPushButton *button_;
+    QRadioButton *bot_variant_selected_;
+    QGroupBox *bot_variants_;
+    QRadioButton *region_variant_selected_;
+    QGroupBox *region_variants_;
 
   private Q_SLOTS:
     void buttonActivated();
