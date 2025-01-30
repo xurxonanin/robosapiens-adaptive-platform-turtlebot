@@ -1,4 +1,5 @@
 #include <QVBoxLayout>
+#include <QStringList>
 #include <rviz_common/display_context.hpp>
 #include <rviz_plugin/rviz_panel.hpp>
 #include <std_msgs/msg/detail/u_int16_multi_array__struct.hpp>
@@ -6,13 +7,31 @@
 namespace rviz_panel_tutorial
 {
 
+  QString toQString(const spin_interfaces::msg::SpinCommand &command)
+  {
+    return QString("{omega: %1, duration: %2}").arg(command.omega).arg(command.duration);
+  }
+
+  QString toQString(const spin_interfaces::msg::SpinPeriodicCommands &periodic_cmds)
+  {
+
+    QStringList cmds_list;
+    for (const auto &cmd : periodic_cmds.commands)
+    {
+      cmds_list.append(toQString(cmd));
+    }
+
+    return "SpinPeriodicComands {commands: [" + cmds_list.join(", ") + "], period: " + QString::number(periodic_cmds.period, 'f', 2) + "}";
+  }
+
   DemoPanel::DemoPanel(QWidget *parent) : Panel(parent)
   {
     // Create a label and a button, displayed vertically (the V in VBox means
     // vertical)
     const auto layout = new QVBoxLayout(this);
     // Create a button and a label for the button
-    label_ = new QLabel("[no spin config yet]");
+    label_ = new QTextEdit("[no spin config yet]");
+    label_->setReadOnly(true);
     button_ = new QPushButton("TB3 Sim Occlusion!");
     // Add those elements to the GUI layout
     layout->addWidget(label_);
@@ -43,16 +62,16 @@ namespace rviz_panel_tutorial
 
     // Create a String subscription and bind it to the topicCallback inside this
     // class.
-    subscription_ = node->create_subscription<std_msgs::msg::String>(
-        "/input", 10,
+    subscription_ = node->create_subscription<spin_interfaces::msg::SpinPeriodicCommands>(
+        "/spin_config", 10,
         std::bind(&DemoPanel::topicCallback, this, std::placeholders::_1));
   }
 
   // When the subscriber gets a message, this callback is triggered,
   // and then we copy its data into the widget's label
-  void DemoPanel::topicCallback(const std_msgs::msg::String &msg)
+  void DemoPanel::topicCallback(const spin_interfaces::msg::SpinPeriodicCommands &msg)
   {
-    label_->setText(QString(msg.data.c_str()));
+    label_->setText(toQString(msg));
   }
 
   // When the widget's button is pressed, this callback is triggered,

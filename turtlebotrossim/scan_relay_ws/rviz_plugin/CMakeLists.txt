@@ -9,6 +9,7 @@ find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_ros REQUIRED)
 find_package(pluginlib REQUIRED)
 find_package(rviz_common REQUIRED)
+find_package(spin_interfaces REQUIRED)
 
 set(CMAKE_AUTOMOC ON)
 qt5_wrap_cpp(MOC_FILES
@@ -23,6 +24,7 @@ target_include_directories(demo_panel PUBLIC
 ament_target_dependencies(demo_panel
   pluginlib
   rviz_common
+  spin_interfaces
 )
 install(TARGETS demo_panel
         EXPORT export_rviz_plugin

@@ -1,11 +1,12 @@
 #pragma once
 
 #include "std_msgs/msg/u_int16_multi_array.hpp"
-#include <QLabel>
+#include <QTextEdit>
 #include <QPushButton>
 #include <rviz_common/panel.hpp>
 #include <rviz_common/ros_integration/ros_node_abstraction_iface.hpp>
 #include <std_msgs/msg/string.hpp>
+#include "spin_interfaces/msg/spin_periodic_commands.hpp"
 
 namespace rviz_panel_tutorial
 {
@@ -22,11 +23,11 @@ namespace rviz_panel_tutorial
     std::shared_ptr<rviz_common::ros_integration::RosNodeAbstractionIface>
         node_ptr_;
     rclcpp::Publisher<std_msgs::msg::UInt16MultiArray>::SharedPtr publisher_;
-    rclcpp::Subscription<std_msgs::msg::String>::SharedPtr subscription_;
+    rclcpp::Subscription<spin_interfaces::msg::SpinPeriodicCommands>::SharedPtr subscription_;
 
-    void topicCallback(const std_msgs::msg::String &msg);
+    void topicCallback(const spin_interfaces::msg::SpinPeriodicCommands &msg);
 
-    QLabel *label_;
+    QTextEdit *label_;
     QPushButton *button_;
 
   private Q_SLOTS:
