@@ -19,6 +19,10 @@ namespace spin_panel
     {
       QRadioButton *button = new QRadioButton(option);
       layout->addWidget(button, row, col);
+      if (option == "TurtleBot3 sim")
+        button->setChecked(true);
+      else if (option == "TurtleBot3 real" || option == "TurtleBot4 sim" || option == "TurtleBot4 real")
+        button->setEnabled(false);
       if (!selectedButton)
         selectedButton = button; // Default to first button
       col = (col + 1) % 2;       // Switch columns
