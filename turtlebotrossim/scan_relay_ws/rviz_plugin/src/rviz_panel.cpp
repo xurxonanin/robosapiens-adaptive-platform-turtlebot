@@ -3,9 +3,21 @@
 #include <rviz_common/display_context.hpp>
 #include <rviz_plugin/rviz_panel.hpp>
 #include <std_msgs/msg/detail/u_int16_multi_array__struct.hpp>
+#include <rviz_common/logging.hpp>
 
 namespace spin_panel
 {
+
+  std::string vec_to_string(const std::vector<uint16_t> &vec)
+  {
+    std::string str = "[";
+    for (const auto &val : vec)
+    {
+      str += std::to_string(val) + ", ";
+    }
+    str += "]";
+    return str;
+  }
 
   // Function to create a group of radio buttons
   template <typename Iterable>
@@ -130,12 +142,17 @@ namespace spin_panel
     {
       if (buttons[i]->isChecked())
       {
-        msg.data = {static_cast<uint16_t>(REGIONS_PAIRS[i].first * lidar_samples),
-                    static_cast<uint16_t>(REGIONS_PAIRS[i].second * lidar_samples)};
+        const auto &init_list = REGION_PAIRS[i];
+        for (const auto &pair : init_list)
+        {
+          msg.data.push_back(static_cast<uint16_t>(pair.first * lidar_samples));
+          msg.data.push_back(static_cast<uint16_t>(pair.second * lidar_samples));
+        }
         break;
       }
     }
 
+    RVIZ_COMMON_LOG_INFO_STREAM("Setting following as non-occluded: " << vec_to_string(msg.data));
     publisher_->publish(msg);
   }
 

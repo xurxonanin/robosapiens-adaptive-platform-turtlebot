@@ -10,6 +10,7 @@
 #include <std_msgs/msg/string.hpp>
 #include "spin_interfaces/msg/spin_periodic_commands.hpp"
 #include <array>
+#include <vector>
 #include <utility>
 
 namespace spin_panel
@@ -25,8 +26,12 @@ namespace spin_panel
     static constexpr std::array BOTS = {"TurtleBot3 sim", "TurtleBot3 real", "TurtleBot4 sim", "TurtleBot4 real"};
     static constexpr std::array LIDAR_SAMPLES = {360_u, 0_u, 0_u, 0_u};
     static constexpr std::array REGIONS_TEXT = {"Northwest", "Northeast", "Southwest", "Southeast"};
-    static constexpr std::array REGIONS_PAIRS = {std::make_pair(0., 0.), std::make_pair(0., 0.75),
-                                                 std::make_pair(0., 0.), std::make_pair(0., 0.)};
+    const std::array<std::vector<std::pair<float, float>>, 4> REGION_PAIRS = {{
+        {{{0.25f, 1.0f}}},                // Northwest
+        {{{0.0f, 0.75f}}},                // Northeast
+        {{{0.0f, 0.25f}, {0.50f, 1.0f}}}, // Southwest
+        {{{0.0f, 0.50f}, {0.75f, 1.0f}}}, // Southeast
+    }};
 
     explicit SpinPanel(QWidget *parent = 0);
     ~SpinPanel() override;
