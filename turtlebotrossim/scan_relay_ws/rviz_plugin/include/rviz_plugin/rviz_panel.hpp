@@ -25,12 +25,14 @@ namespace spin_panel
   public:
     static constexpr std::array BOTS = {"TurtleBot3 sim", "TurtleBot3 real", "TurtleBot4 sim", "TurtleBot4 real"};
     static constexpr std::array LIDAR_SAMPLES = {360_u, 0_u, 0_u, 0_u};
-    static constexpr std::array REGIONS_TEXT = {"Northwest", "Northeast", "Southwest", "Southeast"};
-    const std::array<std::vector<std::pair<float, float>>, 4> REGION_PAIRS = {{
+    static constexpr std::array REGIONS_TEXT = {"Northwest", "Northeast", "Southwest", "Southeast", "No occlusion", "Entire lidar"};
+    const std::array<std::vector<std::pair<float, float>>, 6> REGION_PAIRS = {{
         {{{0.25f, 1.0f}}},                // Northwest
         {{{0.0f, 0.75f}}},                // Northeast
         {{{0.0f, 0.25f}, {0.50f, 1.0f}}}, // Southwest
         {{{0.0f, 0.50f}, {0.75f, 1.0f}}}, // Southeast
+        {{{0.0f, 1.0f}}},                 // None
+        {},                               // Entire lidar 
     }};
 
     explicit SpinPanel(QWidget *parent = 0);
