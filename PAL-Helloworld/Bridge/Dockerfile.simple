@@ -1,0 +1,19 @@
+# Use official ROS 2 Humble image as base
+FROM ros:humble-ros-core-jammy
+# Set working directory
+WORKDIR /app
+
+# Install required packages
+RUN apt update && apt install -y \
+    python3-pip \
+    python3-colcon-common-extensions \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Python dependencies
+RUN pip install paho-mqtt
+
+# Copy the Python script
+COPY Simplebridge.py .
+
+# Source ROS 2 environment on container startup
+CMD ["bash", "-c", "source /opt/ros/humble/setup.bash && python3 Simplebridge.py"]
