@@ -164,7 +164,7 @@ class Plan(Node):
             new_plan = False
 
         if new_plan:
-            for i in range(10):
+            for i in range(2):
                 self.logger.info("Planning")
                 time.sleep(0.1)
             self.publish_event("new_plan")

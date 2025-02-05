@@ -94,7 +94,7 @@ if __name__ == '__main__':
     mqtt_client.on_message = bridge.on_message
 
     # MQTT Broker information
-    broker_address = "127.0.0.1"  # Example broker address
+    broker_address = "localhost"  # Example broker address
     port = 1883
 
     # MQTT Topics

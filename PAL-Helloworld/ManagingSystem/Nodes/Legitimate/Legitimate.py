@@ -40,7 +40,7 @@ class Legitimate(Node):
 
 
         #<!-- cc_code_executer END--!>
-        for i in range(5):
+        for i in range(1):
             self.logger.info("Legitimating")
             time.sleep(0.1)
         self.publish_event(event_key='isLegit')    # LINK <outport> spin_config

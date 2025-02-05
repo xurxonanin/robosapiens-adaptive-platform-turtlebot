@@ -39,16 +39,16 @@ services:
     ports:
       - 8050:8050
 
-  rosmqttbridge:
-    build:
-      context: ./Bridge
-      dockerfile: Dockerfile.simple
-    container_name: bridge
-    network_mode: "host"	
-    depends_on:
-      emqx-enterprise:
-          condition: service_healthy
-    
+#  rosmqttbridge:
+#    build:
+#      context: ./Bridge
+#      dockerfile: Dockerfile.simple
+#    container_name: bridge
+#    network_mode: "host"
+#    depends_on:
+#      emqx-enterprise:
+#          condition: service_healthy
+#
     
   # simulator:
   #   build: 
