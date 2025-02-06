@@ -11,13 +11,61 @@ namespace spin_panel
   {
     // NOTE: Tried to put this in rviz_panel.hpp but got a linker error - I think it's due to QT Moc
     auto arr = detail::make_occlusions_map().at(detail::BotOcc{bot, direction});
-    std::sort(arr.begin(), arr.end());
     std::vector<std::pair<uint16_t, uint16_t>> vec{};
-    constexpr auto sorter = [](const auto &elem)
+
+    // Transforming from [(base-angle, width)] to [(start, end)]
+    for (const auto &elem : arr)
     {
-      return (elem != detail::DONT_CARE);
-    };
-    std::copy_if(arr.begin(), arr.end(), std::back_inserter(vec), sorter);
+      if (elem == detail::DONT_CARE)
+      {
+        continue;
+      }
+      const auto lidar_size = BOT_LIDAR_SIZES.at(bot);
+      // If the occlusion is the entire lidar
+      if (elem.second == lidar_size)
+      {
+        vec.emplace_back(0, lidar_size);
+        continue;
+      }
+
+      // Normalize the occlusion to the lidar size
+      const auto tmp = std::make_pair(elem.first % lidar_size, (elem.first + elem.second) % lidar_size);
+      if (tmp.second < tmp.first)
+      {
+        // Filter (0, 0) intervals...
+        if (tmp.second != 0)
+        {
+          vec.emplace_back(0, tmp.second);
+        }
+        vec.emplace_back(tmp.first, lidar_size);
+      }
+      else
+      {
+        vec.emplace_back(tmp);
+      }
+    }
+
+    // If intervals overlap, merge them in-place
+    if (vec.empty())
+      return vec;
+    std::sort(vec.begin(), vec.end());
+    int index = 0; // Tracks the last merged position
+    for (size_t i = 1; i < vec.size(); ++i)
+    {
+      // If current.start overlaps with prev.end
+      if (vec[i].first <= vec[index].second)
+      {
+        // Change prev.end to the largest end interval
+        vec[index].second = std::max(vec[index].second, vec[i].second);
+      }
+      else
+      {
+        ++index;
+        vec[index] = vec[i]; // Move the non-overlapping interval forward
+      }
+    }
+    // Resize the vector to keep only the merged intervals
+    vec.resize(index + 1);
     return vec;
   }
 
