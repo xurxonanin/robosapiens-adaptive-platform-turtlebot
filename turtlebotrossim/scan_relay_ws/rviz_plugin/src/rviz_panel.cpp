@@ -7,6 +7,20 @@
 
 namespace spin_panel
 {
+  std::vector<std::pair<uint16_t, uint16_t>> get_occlusion_vec(const bot_variant &bot, const occlusion_direction &direction)
+  {
+    // NOTE: Tried to put this in rviz_panel.hpp but got a linker error - I think it's due to QT Moc
+    auto arr = detail::make_occlusions_map().at(detail::BotOcc{bot, direction});
+    std::sort(arr.begin(), arr.end());
+    std::vector<std::pair<uint16_t, uint16_t>> vec{};
+    constexpr auto sorter = [](const auto &elem)
+    {
+      return (elem != detail::DONT_CARE);
+    };
+    std::copy_if(arr.begin(), arr.end(), std::back_inserter(vec), sorter);
+    return vec;
+  }
+
   std::string vec_to_string(const std::vector<uint16_t> &vec)
   {
     std::string str = "[";
@@ -128,14 +142,14 @@ namespace spin_panel
   {
     auto msg = std_msgs::msg::UInt16MultiArray();
     auto buttons = bot_variants_->findChildren<QRadioButton *>();
-    bot_variant bot_variant = BOTS[0];
-    occlusion_direction occlusion_direction = DIRECTIONS[0];
+    bot_variant bv = BOTS[0];
+    occlusion_direction od = DIRECTIONS[0];
 
     for (int i = 0; i < buttons.size(); ++i)
     {
       if (buttons[i]->isChecked())
       {
-        bot_variant = BOTS[i];
+        bv = BOTS[i];
         break;
       }
     }
@@ -145,27 +159,21 @@ namespace spin_panel
     {
       if (buttons[i]->isChecked())
       {
-        occlusion_direction = DIRECTIONS[i];
+        od = DIRECTIONS[i];
         break;
       }
     }
 
-    auto arr = make_occlusions_map().at(BotOcc{bot_variant, occlusion_direction});
-    std::sort(arr.begin(), arr.end());
-    for (const auto &elem : arr)
+    const auto vec = get_occlusion_vec(bv, od);
+    for (const auto &elem : vec)
     {
-      // The (0,0) is an artifact from rotation calculations
-      if (elem != DONT_CARE && elem != std::make_pair(0_u, 0_u))
-      {
-        msg.data.emplace_back(elem.first);
-        msg.data.emplace_back(elem.second);
-      }
+      msg.data.emplace_back(elem.first);
+      msg.data.emplace_back(elem.second);
     }
 
     RVIZ_COMMON_LOG_INFO_STREAM("Setting following as non-occluded: " << vec_to_string(msg.data));
     publisher_->publish(msg);
   }
-
 } // namespace spin_panel
 
 #include <pluginlib/class_list_macros.hpp>

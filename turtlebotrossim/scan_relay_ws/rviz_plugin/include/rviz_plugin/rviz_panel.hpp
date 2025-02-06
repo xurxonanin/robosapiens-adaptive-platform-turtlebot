@@ -44,22 +44,6 @@ namespace spin_panel
     Entire,
   };
 
-  struct BotOcc
-  {
-    bot_variant bot = bot_variant::TB3_Sim;
-    occlusion_direction occ = occlusion_direction::NW;
-  };
-
-  constexpr bool operator==(const BotOcc &lhs, const BotOcc &rhs)
-  {
-    return lhs.bot == rhs.bot && lhs.occ == rhs.occ;
-  }
-
-  constexpr bool operator<(const BotOcc &lhs, const BotOcc &rhs)
-  {
-    return lhs.bot < rhs.bot || (lhs.bot == rhs.bot && lhs.occ < rhs.occ);
-  }
-
   static constexpr std::array<bot_variant, 4>
       BOTS = {bot_variant::TB3_Sim, bot_variant::TB3_Real, bot_variant::TB4_Sim, bot_variant::TB4_Real};
 
@@ -95,126 +79,131 @@ namespace spin_panel
       {occlusion_direction::Entire, "Entire lidar"},
   };
 
-  static constexpr auto DONT_CARE = std::make_pair(std::numeric_limits<uint16_t>::max(), std::numeric_limits<uint16_t>::max());
-
-  static constexpr frozen::unordered_map<occlusion_direction,
-                                         std::array<std::pair<uint16_t, uint16_t>, 2>, 6>
-      DIRECTION_OCCLUSIONS = {
-          {occlusion_direction::NW, {{{90_u, 360_u}, DONT_CARE}}},
-          {occlusion_direction::NE, {{{0_u, 270_u}, DONT_CARE}}},
-          {occlusion_direction::SW, {{{0_u, 90_u}, {180_u, 360_u}}}},
-          {occlusion_direction::SE, {{{0_u, 180_u}, {270_u, 360_u}}}},
-          {occlusion_direction::None, {{{0_u, 360_u}, DONT_CARE}}},
-          {occlusion_direction::Entire, {{DONT_CARE, DONT_CARE}}},
-  };
-
-  constexpr std::array<std::pair<uint16_t, uint16_t>, 2> rotate_occlusions(const BotOcc &bot_occ)
+  namespace detail
   {
-    constexpr auto apply_rotation = [](std::pair<uint16_t, uint16_t> pair, uint16_t rotation, uint16_t lidar_size) -> std::pair<uint16_t, uint16_t>
+    struct BotOcc
     {
-      if (pair == DONT_CARE)
-      {
-        return pair;
-      }
-      const auto first_tmp = static_cast<float>(pair.first) / 360.0f * lidar_size;
-      const auto second_tmp = static_cast<float>(pair.second) / 360.0f * lidar_size;
-      const auto rot = static_cast<float>(rotation) / 360.0f * lidar_size;
-      const auto first = static_cast<uint16_t>(first_tmp + rot) % lidar_size;
-      const auto second = static_cast<uint16_t>(second_tmp + rot) % lidar_size;
-      if (second == 0)
-      {
-        return std::make_pair(first, lidar_size);
-      }
-      else
-      {
-        return std::make_pair(first, second);
-      }
+      bot_variant bot = bot_variant::TB3_Sim;
+      occlusion_direction occ = occlusion_direction::NW;
     };
-    const auto rotation = BOT_LIDAR_ROTATIONS.at(bot_occ.bot);
-    const auto init_occlusions = DIRECTION_OCCLUSIONS.at(bot_occ.occ);
-    const auto lidar_samples = BOT_LIDAR_SIZES.at(bot_occ.bot);
-    if (init_occlusions[0] == DONT_CARE && init_occlusions[1] == DONT_CARE)
+
+    constexpr bool operator==(const BotOcc &lhs, const BotOcc &rhs)
     {
-      return init_occlusions;
+      return lhs.bot == rhs.bot && lhs.occ == rhs.occ;
     }
-    else if (init_occlusions[1] == DONT_CARE)
+
+    constexpr bool operator<(const BotOcc &lhs, const BotOcc &rhs)
     {
-      // The scenario where either the first coordinate overflows after rotation and we need to wrap around
-      // Or where we can just increase
-      const auto [first, second] = apply_rotation(init_occlusions[0], rotation, lidar_samples);
-      if (second < first)
+      return lhs.bot < rhs.bot || (lhs.bot == rhs.bot && lhs.occ < rhs.occ);
+    }
+
+    static constexpr auto DONT_CARE = std::make_pair(std::numeric_limits<uint16_t>::max(), std::numeric_limits<uint16_t>::max());
+
+    static constexpr frozen::unordered_map<occlusion_direction,
+                                           std::array<std::pair<uint16_t, uint16_t>, 2>, 6>
+        DIRECTION_OCCLUSIONS = {
+            {occlusion_direction::NW, {{{90_u, 360_u}, DONT_CARE}}},
+            {occlusion_direction::NE, {{{0_u, 270_u}, DONT_CARE}}},
+            {occlusion_direction::SW, {{{0_u, 90_u}, {180_u, 360_u}}}},
+            {occlusion_direction::SE, {{{0_u, 180_u}, {270_u, 360_u}}}},
+            {occlusion_direction::None, {{{0_u, 360_u}, DONT_CARE}}},
+            {occlusion_direction::Entire, {{DONT_CARE, DONT_CARE}}},
+    };
+
+    constexpr std::array<std::pair<uint16_t, uint16_t>, 2> rotate_occlusions(const BotOcc &bot_occ)
+    {
+      constexpr auto apply_rotation = [](std::pair<uint16_t, uint16_t> pair, uint16_t rotation, uint16_t lidar_size) -> std::pair<uint16_t, uint16_t>
       {
-        // If (a, b) where b < a then [(0, b), (a, 360)]
-        std::array<std::pair<uint16_t, uint16_t>, 2> occlusions{{{0, second},
-                                                                 {first, lidar_samples}}};
-        return occlusions;
+        if (pair == DONT_CARE)
+        {
+          return pair;
+        }
+        const auto first_tmp = static_cast<float>(pair.first) / 360.0f * lidar_size;
+        const auto second_tmp = static_cast<float>(pair.second) / 360.0f * lidar_size;
+        const auto rot = static_cast<float>(rotation) / 360.0f * lidar_size;
+        const auto first = static_cast<uint16_t>(first_tmp + rot) % lidar_size;
+        const auto second = static_cast<uint16_t>(second_tmp + rot) % lidar_size;
+        if (second == 0)
+        {
+          return std::make_pair(first, lidar_size);
+        }
+        else
+        {
+          return std::make_pair(first, second);
+        }
+      };
+      const auto rotation = BOT_LIDAR_ROTATIONS.at(bot_occ.bot);
+      const auto init_occlusions = DIRECTION_OCCLUSIONS.at(bot_occ.occ);
+      const auto lidar_samples = BOT_LIDAR_SIZES.at(bot_occ.bot);
+      if (init_occlusions[0] == DONT_CARE && init_occlusions[1] == DONT_CARE)
+      {
+        return init_occlusions;
+      }
+      else if (init_occlusions[1] == DONT_CARE)
+      {
+        // The scenario where either the first coordinate overflows after rotation and we need to wrap around
+        // Or where we can just increase
+        const auto [first, second] = apply_rotation(init_occlusions[0], rotation, lidar_samples);
+        if (second < first)
+        {
+          // If (a, b) where b < a then [(0, b), (a, 360)]
+          std::array<std::pair<uint16_t, uint16_t>, 2> occlusions{{{0, second},
+                                                                   {first, lidar_samples}}};
+          return occlusions;
+        }
+        else
+        {
+          return {std::make_pair(first, second), DONT_CARE};
+        }
       }
       else
       {
-        return {std::make_pair(first, second), DONT_CARE};
+        const auto lower_region = apply_rotation(init_occlusions[0], rotation, lidar_samples);
+        const auto upper_region = apply_rotation(init_occlusions[1], rotation, lidar_samples);
+        if (lower_region.second < lower_region.first && upper_region.second < upper_region.first)
+        {
+          // Ill-formed config. This would require an array of 4...
+          // We can't have two occlusions that wrap around
+          return {DONT_CARE, DONT_CARE};
+        }
+        else if (lower_region.first == upper_region.second)
+        {
+          // An example of this case is [(0, 90), (180, 360)] with a rotation = 90 and lidar_samples = 360.
+          // Without handling edge case this becomes: [(90, 180), (270, 90)]
+          // Need to transform it into [(0, 180), (270, 360)]
+          return {std::make_pair(0, lower_region.second), std::make_pair(upper_region.first, lidar_samples)};
+        }
+        else
+        {
+          return {lower_region, upper_region};
+        }
       }
     }
-    else
+
+    constexpr auto occlusions_pair_array()
     {
-      const auto lower_region = apply_rotation(init_occlusions[0], rotation, lidar_samples);
-      const auto upper_region = apply_rotation(init_occlusions[1], rotation, lidar_samples);
-      if (lower_region.second < lower_region.first && upper_region.second < upper_region.first)
+      constexpr auto pair_with_occlusion = [](const BotOcc &bot_occ)
       {
-        // Ill-formed config. This would require an array of 4...
-        // We can't have two occlusions that wrap around
-        return {DONT_CARE, DONT_CARE};
-      }
-      else if (lower_region.first == upper_region.second)
+        return std::make_pair(bot_occ, rotate_occlusions(bot_occ));
+      };
+
+      std::array<std::pair<BotOcc, std::array<std::pair<uint16_t, uint16_t>, 2>>, BOTS.size() * DIRECTIONS.size()> arr{};
+      for (size_t i = 0; i < BOTS.size(); i++)
       {
-        // An example of this case is [(0, 90), (180, 360)] with a rotation = 90 and lidar_samples = 360.
-        // Without handling edge case this becomes: [(90, 180), (270, 90)]
-        // Need to transform it into [(0, 180), (270, 360)]
-        return {std::make_pair(0, lower_region.second), std::make_pair(upper_region.first, lidar_samples)};
+        for (size_t j = 0; j < DIRECTIONS.size(); j++)
+        {
+          arr[i * DIRECTIONS.size() + j] = pair_with_occlusion(BotOcc{BOTS[i], DIRECTIONS[j]});
+        }
       }
-      else
-      {
-        return {lower_region, upper_region};
-      }
+      return arr;
     }
-  }
 
-  constexpr auto pair_with_occlusion(const BotOcc &bot_occ)
-  {
-    return std::make_pair(bot_occ, rotate_occlusions(bot_occ));
-  }
-
-  static constexpr std::pair<BotOcc, std::array<std::pair<uint16_t, uint16_t>, 2>> occlusions_pair_array[]{
-      pair_with_occlusion(BotOcc{bot_variant::TB3_Sim, occlusion_direction::NW}),
-      pair_with_occlusion(BotOcc{bot_variant::TB3_Sim, occlusion_direction::NE}),
-      pair_with_occlusion(BotOcc{bot_variant::TB3_Sim, occlusion_direction::SW}),
-      pair_with_occlusion(BotOcc{bot_variant::TB3_Sim, occlusion_direction::SE}),
-      pair_with_occlusion(BotOcc{bot_variant::TB3_Sim, occlusion_direction::None}),
-      pair_with_occlusion(BotOcc{bot_variant::TB3_Sim, occlusion_direction::Entire}),
-      pair_with_occlusion(BotOcc{bot_variant::TB3_Real, occlusion_direction::NW}),
-      pair_with_occlusion(BotOcc{bot_variant::TB3_Real, occlusion_direction::NE}),
-      pair_with_occlusion(BotOcc{bot_variant::TB3_Real, occlusion_direction::SW}),
-      pair_with_occlusion(BotOcc{bot_variant::TB3_Real, occlusion_direction::SE}),
-      pair_with_occlusion(BotOcc{bot_variant::TB3_Real, occlusion_direction::None}),
-      pair_with_occlusion(BotOcc{bot_variant::TB3_Real, occlusion_direction::Entire}),
-      pair_with_occlusion(BotOcc{bot_variant::TB4_Sim, occlusion_direction::NW}),
-      pair_with_occlusion(BotOcc{bot_variant::TB4_Sim, occlusion_direction::NE}),
-      pair_with_occlusion(BotOcc{bot_variant::TB4_Sim, occlusion_direction::SW}),
-      pair_with_occlusion(BotOcc{bot_variant::TB4_Sim, occlusion_direction::SE}),
-      pair_with_occlusion(BotOcc{bot_variant::TB4_Sim, occlusion_direction::None}),
-      pair_with_occlusion(BotOcc{bot_variant::TB4_Sim, occlusion_direction::Entire}),
-      pair_with_occlusion(BotOcc{bot_variant::TB4_Real, occlusion_direction::NW}),
-      pair_with_occlusion(BotOcc{bot_variant::TB4_Real, occlusion_direction::NE}),
-      pair_with_occlusion(BotOcc{bot_variant::TB4_Real, occlusion_direction::SW}),
-      pair_with_occlusion(BotOcc{bot_variant::TB4_Real, occlusion_direction::SE}),
-      pair_with_occlusion(BotOcc{bot_variant::TB4_Real, occlusion_direction::None}),
-      pair_with_occlusion(BotOcc{bot_variant::TB4_Real, occlusion_direction::Entire}),
-  };
-
-  // TODO: Make this return unordered map instead - I just can't get the hashing to work
-  constexpr auto make_occlusions_map()
-  {
-    return frozen::make_map(occlusions_pair_array);
-  }
+    // TODO: Make this return unordered map instead - I just can't get the hashing to work
+    constexpr auto make_occlusions_map()
+    {
+      return frozen::make_map(occlusions_pair_array());
+    }
+  } // namespace detail
 
   class SpinPanel : public rviz_common::Panel
   {
