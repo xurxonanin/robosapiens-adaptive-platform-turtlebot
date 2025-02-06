@@ -455,7 +455,9 @@ class ProbLidarMask(LidarMask[float]):
         return fig
     
     def plot(self, **kwargs):
+        import matplotlib
         from matplotlib import pyplot as plt
+        matplotlib.use('agg')
 
         x = self.real_angles
         y = self._values

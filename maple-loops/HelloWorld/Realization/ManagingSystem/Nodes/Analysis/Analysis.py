@@ -18,6 +18,7 @@ from typing import List, Tuple, Dict
 import traceback
 import numpy as np
 import pickle
+from matplotlib import pyplot as plt
 #<!-- cc_include END--!>
 
 #<!-- cc_code START--!>
@@ -78,6 +79,10 @@ class Analysis(Node):
         self._scans.append(self.lidar_data)
         prob_lidar_mask = next(self._sliding_prob_lidar_masks)
         prob_lidar_mask = prob_lidar_mask.rotate(-Fraction(1, 2))
+        # Save the mask for showing in dashboard
+        prob_lidar_mask.plot()
+        plt.savefig("prob_lidar_mask.png")
+        plt.close()
 
         lidar_mask = (prob_lidar_mask >= OCCLUSION_THRESHOLD)
         # Weaken lidar masks to threshold

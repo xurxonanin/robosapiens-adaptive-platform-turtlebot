@@ -7,6 +7,10 @@ import threading
 import re
 from datetime import datetime
 import pandas as pd
+import base64
+import io
+from PIL import Image, ImageDraw
+import time
 
 # Path to the log file
 LOG_FILE = 'MAPE_test.log'
@@ -28,6 +32,7 @@ def parse_log():
                 execute_match = re.search(r"Execute.*INFO - (.*?)", line)
                 legitimate_match = re.search(r"Legitimate.*INFO - (.*?)", line)  # Placeholder
                 trustworthiness_match = re.search(r"Trustworthiness.*INFO - (.*?)", line)  # Placeholder
+                mask_match = re.search(r"Analysis.*INFO - (.*?)", line)
 
                 if timestamp_match:
                     timestamp = datetime.strptime(timestamp_match.group(1), "%Y-%m-%d %H:%M:%S,%f")
@@ -46,6 +51,8 @@ def parse_log():
             else:
                 time.sleep(0.5)
 
+
+
 # Start the log parser in a separate thread
 log_parser_thread = threading.Thread(target=parse_log, daemon=True)
 log_parser_thread.start()
@@ -62,7 +69,10 @@ app.layout = html.Div([
         id='interval-component',
         interval=1000,  # Update every 1 second
         n_intervals=0
-    )
+    ),
+    html.H1("Probabilistic Lidar Mask:", style={"textAlign": "center"}),
+    html.Img(id="dynamic-image", style={"height": "100px", "width": "600px", "textAlign": "center"}),
+    dcc.Interval(id="image-interval", interval=1000, n_intervals=0)  # Update every second
 ])
 
 # Callback to update Gantt chart
@@ -117,6 +127,23 @@ def update_gantt_chart(n_intervals):
         plot_bgcolor="rgba(240, 240, 240, 1)"  # Light gray background
     )
     return fig
+
+def generate_image():
+    try:
+        with open("prob_lidar_mask.png", 'rb') as f:
+            image = f.read()
+        return 'data:image/png;base64,' + base64.b64encode(image).decode('utf-8')
+    except FileNotFoundError:
+        # Fallback image or error message if the file is not found
+        return 'data:image/png;base64,' + base64.b64encode(b'').decode('utf-8')  # Empty image as a placeholder
+
+# Callback to update the image
+@app.callback(
+    Output("dynamic-image", "src"),
+    [Input("image-interval", "n_intervals")]
+)
+def update_image(n):
+    return generate_image()
 
 # Run the app
 if __name__ == "__main__":
