@@ -85,7 +85,7 @@ namespace scan
     }
     else
     {
-      RCLCPP_WARN(get_logger(), "Recevied incorrectly formatted config data. Expected an even number of ints.");
+      RCLCPP_WARN(get_logger(), "Received incorrectly formatted config data. Expected an even number of ints.");
     }
   }
 

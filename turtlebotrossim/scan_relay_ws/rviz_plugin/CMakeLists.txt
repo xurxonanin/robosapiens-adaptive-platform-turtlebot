@@ -21,6 +21,9 @@ target_include_directories(spin_panel PUBLIC
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
   $<INSTALL_INTERFACE:include>
 )
+target_include_directories(spin_panel SYSTEM PRIVATE
+  ${CMAKE_SOURCE_DIR}/../3rdparties/frozen/include
+)
 ament_target_dependencies(spin_panel
   pluginlib
   rviz_common

@@ -7,7 +7,6 @@
 
 namespace spin_panel
 {
-
   std::string vec_to_string(const std::vector<uint16_t> &vec)
   {
     std::string str = "[";
@@ -31,9 +30,7 @@ namespace spin_panel
     {
       QRadioButton *button = new QRadioButton(option);
       layout->addWidget(button, row, col);
-      if (option == "TurtleBot3 sim")
-        button->setChecked(true);
-      else if (option == "TurtleBot3 real" || option == "TurtleBot4 sim" || option == "TurtleBot4 real")
+      if (option == BOT_NAMES.at(bot_variant::TB3_Real).data() || option == BOT_NAMES.at(bot_variant::TB4_Sim).data())
         button->setEnabled(false);
       if (!selectedButton)
         selectedButton = button; // Default to first button
@@ -59,7 +56,6 @@ namespace spin_panel
     {
       cmds_list.append(toQString(cmd));
     }
-
     return "SpinPeriodicComands {commands: [" + cmds_list.join(", ") + "], period: " + QString::number(periodic_cmds.period, 'f', 2) + "}";
   }
 
@@ -73,9 +69,15 @@ namespace spin_panel
     label_->setReadOnly(true);
     button_ = new QPushButton("Send mocked occlusion");
     bot_variant_selected_ = nullptr;
-    bot_variants_ = createRadioButtonGroup("Select TurtleBot variant", BOTS, bot_variant_selected_);
+    std::vector<const char *> bot_names{};
+    std::transform(BOTS.begin(), BOTS.end(), std::back_inserter(bot_names), [](auto bot)
+                   { return BOT_NAMES.at(bot).data(); });
+    bot_variants_ = createRadioButtonGroup("Select robot variant", bot_names, bot_variant_selected_);
     region_variant_selected_ = nullptr;
-    region_variants_ = createRadioButtonGroup("Select region to cover", REGIONS_TEXT, region_variant_selected_);
+    std::vector<const char *> occlusion_dirs{};
+    std::transform(DIRECTIONS.begin(), DIRECTIONS.end(), std::back_inserter(occlusion_dirs), [](auto occ)
+                   { return DIRECTION_NAMES.at(occ).data(); });
+    region_variants_ = createRadioButtonGroup("Select region to cover", occlusion_dirs, region_variant_selected_);
 
     // Add those elements to the GUI layout
     layout->addWidget(bot_variants_);
@@ -125,14 +127,15 @@ namespace spin_panel
   void SpinPanel::buttonActivated()
   {
     auto msg = std_msgs::msg::UInt16MultiArray();
-    auto lidar_samples = 0_u;
-
     auto buttons = bot_variants_->findChildren<QRadioButton *>();
+    bot_variant bot_variant = BOTS[0];
+    occlusion_direction occlusion_direction = DIRECTIONS[0];
+
     for (int i = 0; i < buttons.size(); ++i)
     {
       if (buttons[i]->isChecked())
       {
-        lidar_samples = LIDAR_SAMPLES[i];
+        bot_variant = BOTS[i];
         break;
       }
     }
@@ -142,13 +145,20 @@ namespace spin_panel
     {
       if (buttons[i]->isChecked())
       {
-        const auto &init_list = REGION_PAIRS[i];
-        for (const auto &pair : init_list)
-        {
-          msg.data.push_back(static_cast<uint16_t>(pair.first * lidar_samples));
-          msg.data.push_back(static_cast<uint16_t>(pair.second * lidar_samples));
-        }
+        occlusion_direction = DIRECTIONS[i];
         break;
+      }
+    }
+
+    auto arr = make_occlusions_map().at(BotOcc{bot_variant, occlusion_direction});
+    std::sort(arr.begin(), arr.end());
+    for (const auto &elem : arr)
+    {
+      // The (0,0) is an artifact from rotation calculations
+      if (elem != DONT_CARE && elem != std::make_pair(0_u, 0_u))
+      {
+        msg.data.emplace_back(elem.first);
+        msg.data.emplace_back(elem.second);
       }
     }
 
