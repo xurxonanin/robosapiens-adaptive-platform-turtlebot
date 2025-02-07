@@ -115,14 +115,14 @@ services:
     extends: deploynogpu
     command: ros2 launch demo_bringup sim_demo_tb3.launch.py
   rvizlivenvidia:
-    extends: devnvidia
-    command: ros2 launch turtlebot4_viz view_robot.launch.py
+    extends: deploynvidia
+    command: ros2 launch demo_bringup real_demo_tb4_rviz_view.launch.py
   rvizlivemesa:
-    extends: devmesa
-    command: ros2 launch turtlebot4_viz view_robot.launch.py
+    extends: deploymesa
+    command: ros2 launch demo_bringup real_demo_tb4_rviz_view.launch.py
   rvizlivenogpu:
-    extends: devmesa
-    command: ros2 launch turtlebot4_viz view_robot.launch.py
+    extends: deploynogpu
+    command: ros2 launch demo_bringup real_demo_tb4_rviz_view.launch.py
 
 volumes:
   rosuserdata:
