@@ -10,7 +10,12 @@ macro_rules! is_enum_variant {
     };
 }
 
-#[test]
-fn example() {
-    assert!(is_enum_variant!(Some(42), Some(_)));
+#[cfg(test)]
+mod tests {
+    use test_log::test;
+
+    #[test]
+    fn example() {
+        assert!(is_enum_variant!(Some(42), Some(_)));
+    }
 }
