@@ -82,6 +82,16 @@ services:
   devfullnvidiatb4:
     extends: rapdevnvidia
     depends_on: [ simdeploynvidiatb4, rosmqttbridge, redis, emqx ]
+  trustworthiness-checker:
+    build:
+      context: ../trustworthiness-checker
+      dockerfile: docker/DockerfileDeploy
+    network_mode: host
+    volumes:
+       - ../trustworthiness-specs:/mnt/host_models
+  trustworthiness-checker-maple-seq:
+    extends: trustworthiness-checker 
+    command: /mnt/host_models/maple_seq.lola --input-mqtt-topics stage --output-mqtt-topics m a p l e maple
 
 volumes:
   vol-emqx-data:
