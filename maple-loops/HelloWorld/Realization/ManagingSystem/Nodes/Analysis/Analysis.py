@@ -28,6 +28,9 @@ OCCLUSION_THRESHOLD = 0.3
 SLIDING_WINDOW_SIZE = 3
 # Lidar mask sensitivity (ignore small occlusions below this angle)
 OCCLUSION_SENSITIVITY = Fraction(1, 48)
+# Lidar mask change sensitivity
+# Retrigger planning whenever the lidar mask changes by more than this amount
+REPLANNING_SENSITIVITY = Fraction(1, 48)
 
 # user defined!
 def lidar_mask_from_scan(scan) -> BoolLidarMask:
@@ -103,23 +106,30 @@ class Analysis(Node):
 
         # Add the next sliding boolean lidar mask to the knowledge base
         self.logger.info(f" - Lidar mask: {lidar_mask}")
-        serialized_lidar_mask = pickle.dumps(lidar_mask)
+        serialized_lidar_mask = lidar_mask.to_json()
 
         self.knowledge.write("lidar_mask", serialized_lidar_mask)
+        planned_lidar_mask_data = self.knowledge.redis_client.get('planned_lidar_mask')
+        if planned_lidar_mask_data is None:
+            self.logger.info("No planned lidar mask in knowledge")
+            planned_lidar_mask = BoolLidarMask([],
+                Fraction(2, len(laser_scan.get("ranges"))))
+        else:
+            planned_lidar_mask_data = planned_lidar_mask_data.decode('utf-8')
+            planned_lidar_mask = BoolLidarMask.from_json(planned_lidar_mask_data)
+        # self.knowledge.write("planned_lidar_mask", serialized_lidar_mask)
 
         # Set the monitor status to mark an anomaly if the there is any
 
         # occlusion outside of the ignored region
-        anomaly_status_old = self.anomaly
-        if lidar_mask_reduced._values.all():
-            self.anomaly = False
+        self.logger.info(f"planned_lidar_mask = {planned_lidar_mask}")
+        if lidar_mask.dist(planned_lidar_mask) > REPLANNING_SENSITIVITY:
+            self.anomaly = True
+            self.publish_event(event_key='anomaly')
             self.logger.info(f" Anomaly: {self.anomaly}")
         else:
             self.anomaly = True
             self.logger.info(f" Anomaly: {self.anomaly}")
-        if anomaly_status_old != self.anomaly:
-            self.publish_event(event_key='anomaly')
-
 
         #<!-- cc_code_analyse_scan_data END--!>
 
