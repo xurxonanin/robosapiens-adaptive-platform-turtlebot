@@ -95,23 +95,6 @@ class Plan(Node):
         self.logger.info("Plan instantiated")
 
         #<!-- cc_init START--!>
-        self._scans = []
-
-        def scans():
-            while True:
-                for scan in self._scans:
-                    yield scan
-
-                self._scans = []
-
-        def raw_lidar_masks():
-            for scan in scans():
-                yield lidar_mask_from_scan(scan)
-
-        self._sliding_prob_lidar_masks = sliding_prob_lidar_mask(
-            raw_lidar_masks(),
-            window_size=SLIDING_WINDOW_SIZE,
-        )
         #<!-- cc_init END--!>
 
     # -----------------------------AUTO-GEN SKELETON FOR planner-----------------------------
