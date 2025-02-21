@@ -123,6 +123,7 @@ mod tests {
 
     use super::*;
 
+    #[cfg_attr(not(feature = "testcontainers"), ignore)]
     #[test(tokio::test)]
     async fn test_add_monitor_mqtt_output() {
         let model = lola_specification
@@ -167,6 +168,7 @@ mod tests {
         assert_eq!(outputs, expected_outputs);
     }
 
+    #[cfg_attr(not(feature = "testcontainers"), ignore)]
     #[test(tokio::test)]
     async fn test_add_monitor_mqtt_input() {
         let model = lola_specification
@@ -243,6 +245,7 @@ mod tests {
         assert_eq!(outputs, expected_outputs);
     }
 
+    #[cfg_attr(not(feature = "testcontainers"), ignore)]
     #[test(tokio::test)]
     async fn manually_decomposed_monitor_test() {
         let model1 = lola_specification
