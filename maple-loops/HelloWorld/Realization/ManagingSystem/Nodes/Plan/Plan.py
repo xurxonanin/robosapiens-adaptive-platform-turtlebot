@@ -58,8 +58,8 @@ def calculate_lidar_occlusion_rotation_angles(lidar_mask: BoolLidarMask) -> List
     # Return the two rotations necessary for occlusions on either side
     # of the robot
     match occlusion_angles:
-        case [x]:
-            return [x, -x]
+        case [x, y] if x == y:
+            return []
         case [x, y] if 0 <= x <= y:
             return [y, -y]
         case [x, y] if x <= y <= 0:
