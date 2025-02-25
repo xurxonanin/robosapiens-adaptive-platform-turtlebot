@@ -48,7 +48,6 @@ public:
         node->get_parameter(plugin_name_ + ".spin_commands").as_double_array();
     vec_to_spins(vec_d);
 
-    // TODO: Avoid copies???
     dyn_params_handler_ = node->add_on_set_parameters_callback(
         [this](const std::vector<rclcpp::Parameter> params) {
           return dynamicParametersCallback(params);
@@ -58,7 +57,6 @@ public:
   }
 
   void vec_to_spins(const std::vector<double> &vec) {
-    // TODO: Assert even size
     cmds_->commands.clear();
 
     for (size_t i = 0; i < vec.size() / 2; i++) {
@@ -83,19 +81,22 @@ public:
     RCLCPP_INFO(logger_, "SpinningController::dynamicParametersCallback");
 
     rcl_interfaces::msg::SetParametersResult result;
-    std::lock_guard<std::mutex> lock_reinit(param_mutex_);
+    std::lock_guard<std::mutex> lock_reinit(cmds_mutex_);
 
-    for (auto parameter : parameters) {
+    for (auto &parameter : parameters) {
       const auto &type = parameter.get_type();
       const auto &name = parameter.get_name();
 
+      // Spin period - how often to restart
       if (type == rcl_interfaces::msg::ParameterType::PARAMETER_DOUBLE) {
         if (name == plugin_name_ + ".spin_period") {
           cmds_->period = parameter.as_double();
           RCLCPP_INFO(logger_, "New spin period: %f", cmds_->period);
         }
-      } else if (type ==
-                 rcl_interfaces::msg::ParameterType::PARAMETER_DOUBLE_ARRAY) {
+      }
+      // Spin commands - individual spin orders
+      else if (type ==
+               rcl_interfaces::msg::ParameterType::PARAMETER_DOUBLE_ARRAY) {
         if (name == plugin_name_ + ".spin_commands") {
           auto vec_d = parameter.as_double_array();
           vec_to_spins(vec_d);
@@ -132,6 +133,7 @@ private:
              std::abs(cmd_vel.twist.linear.z) > epsilon;
     };
 
+    std::lock_guard<std::mutex> lock_reinit(cmds_mutex_);
     if (!cmds_ || cmds_->commands.empty()) {
       return;
     }
@@ -168,7 +170,7 @@ private:
   spin_interfaces::msg::SpinPeriodicCommands::SharedPtr cmds_{};
   std::string plugin_name_;
 
-  std::mutex param_mutex_;
+  std::mutex cmds_mutex_;
   rclcpp::node_interfaces::OnSetParametersCallbackHandle::SharedPtr
       dyn_params_handler_;
 };
