@@ -137,8 +137,6 @@ class Plan(Node):
 
             occlusion_angles = calculate_lidar_occlusion_rotation_angles(lidar_mask)
             directions = occlusion_angles_to_rotations(occlusion_angles)
-            self.knowledge.write("directions", json.dumps(directions))
-            self.logger.info(f"- Plan action written to knowledge :{directions}")
             new_plan = True
         except:
             raise
