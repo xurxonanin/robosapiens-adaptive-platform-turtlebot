@@ -1,4 +1,3 @@
-use futures::FutureExt;
 use futures::StreamExt;
 use futures::stream::BoxStream;
 use paho_mqtt as mqtt;
@@ -12,11 +11,11 @@ use r2r::qos::ReliabilityPolicy as QosReliabilityPolicy;
 use r2r::spin_interfaces::msg::SpinPeriodicCommands as MSpinCommands;
 use serde::Deserialize;
 use serde::Serialize;
-use std::collections::BTreeMap;
 use tokio::select;
 use tokio::sync::oneshot;
 use tracing::info;
 // Removed incorrect import of std::fmt::Result.
+use serde::de::{self, Deserializer};
 use std::sync::LazyLock;
 use std::time::Duration;
 use tracing::debug;
@@ -26,14 +25,6 @@ use tracing::warn;
 use uuid::Uuid;
 
 const MQTT_QOS: i32 = 1;
-
-static ROS2MQTT_MAP: LazyLock<BTreeMap<&str, &str>> = LazyLock::new(|| {
-    vec![("/scan_safe", "/Scan"), ("/spin_config", "/spin_config")]
-        .into_iter()
-        .collect()
-});
-static MQTT2ROS_MAP: LazyLock<BTreeMap<&str, &str>> =
-    LazyLock::new(|| ROS2MQTT_MAP.iter().map(|(&x, &y)| (y, x)).collect());
 
 static TOPICS: LazyLock<Vec<Topic>> = LazyLock::new(|| {
     vec![
@@ -60,34 +51,80 @@ impl Topic {
         TOPICS.iter().cloned().find(|&x| x.ros_name == topic)
     }
 
+    #[allow(dead_code)]
     fn mqtt_topic(topic: &str) -> Option<Topic> {
         TOPICS.iter().cloned().find(|&x| x.mqtt_name == topic)
     }
 }
 
-// struct LaserScan {
-// angle_min: f64,
-// angle_max: f64,
-// angle_increment: f64,
-// scan_time: f64,
-// range_min: f64,
-// range_max: f64,
-// }
-
-// struct SpinConfig
-
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 #[serde(untagged)]
 enum ROS2MQTTData {
     LaserScan(r2r::sensor_msgs::msg::LaserScan),
 }
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Debug, Clone)]
 #[serde(untagged)]
 enum MQTT2ROSData {
     SpinCommands(MSpinCommands),
 }
 
+/* Implement a custom deserializer for MQTT2ROSData
+ * This added stricter validation than the default derived one, which does not
+ * check for the presence of required fields in the SpinCommands message and
+ * allows for extra fields.
+ */
+impl<'de> Deserialize<'de> for MQTT2ROSData {
+    fn deserialize<D>(deserializer: D) -> Result<MQTT2ROSData, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        // Deserialize into the helper struct. This will enforce that exactly
+        // the fields "commands" (an array of objects each with "omega" and "duration")
+        // and "period" are present.
+        let helper = SpinCommandsHelper::deserialize(deserializer).map_err(de::Error::custom)?;
+        // Convert the helper to your ROS message type.
+        let spin_cmds = MSpinCommands::try_from(helper).map_err(de::Error::custom)?;
+        Ok(MQTT2ROSData::SpinCommands(spin_cmds))
+    }
+}
+
+// A helper struct for individual spin commands.
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+struct SpinCommandHelper {
+    omega: f64,
+    duration: f64,
+}
+
+// A helper struct for the overall spin commands message.
+#[derive(Deserialize, Debug)]
+#[serde(deny_unknown_fields)]
+struct SpinCommandsHelper {
+    commands: Vec<SpinCommandHelper>,
+    period: f64,
+}
+
+// Convert the helper into the actual ROS message type.
+impl TryFrom<SpinCommandsHelper> for MSpinCommands {
+    type Error = &'static str;
+
+    fn try_from(helper: SpinCommandsHelper) -> Result<Self, Self::Error> {
+        Ok(MSpinCommands {
+            commands: helper
+                .commands
+                .into_iter()
+                .map(|cmd| r2r::spin_interfaces::msg::SpinCommand {
+                    omega: cmd.omega,
+                    duration: cmd.duration,
+                })
+                .collect(),
+            period: helper.period,
+        })
+    }
+}
+
+#[derive(Debug, Clone)]
 enum MQTT2ROSError {
     InvalidTopic,
     DeserializationError(serde_json5::Error),
@@ -333,4 +370,39 @@ pub async fn bridge(
         _ = ros_fut => (),
         _ = mqtt_fut => (),
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use test_log::test;
+    #[test]
+    fn test_convert_valid_spin_commands() {
+        let msg = r#"{"commands":[],"period":0.0}"#;
+        let mqtt_msg = mqtt::Message::new("/spin_config", msg.to_string(), MQTT_QOS);
+        let result = MQTT2ROSData::try_from(mqtt_msg);
+        assert!(result.is_ok());
+    }
+
+    #[test]
+    fn test_invalid_spin_commands() {
+        let msg = r#"{"blah": false}"#;
+        let mqtt_msg = mqtt::Message::new("/spin_config", msg.to_string(), MQTT_QOS);
+        let result = MQTT2ROSData::try_from(mqtt_msg);
+        if let Ok(res) = result.clone() {
+            info!("{:?}", res);
+        }
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn test_invalid_spin_commands_extra_fields() {
+        let msg = r#"{"commands":[],"period":0.0, "blah": false}"#;
+        let mqtt_msg = mqtt::Message::new("/spin_config", msg.to_string(), MQTT_QOS);
+        let result = MQTT2ROSData::try_from(mqtt_msg);
+        if let Ok(res) = result.clone() {
+            info!("{:?}", res);
+        }
+        assert!(result.is_err());
+    }
 }
