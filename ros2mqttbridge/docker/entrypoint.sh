@@ -12,6 +12,8 @@ then
   # echo "Sourced TurtleBot4 base workspace"
 fi
 
+export PATH=$HOME/.cargo/bin/:$PATH
+
 sudo groupadd -g $(stat -c "%g" /var/run/docker.sock) docker &> /dev/null
 sudo usermod -aG docker $(id -nu)
 
