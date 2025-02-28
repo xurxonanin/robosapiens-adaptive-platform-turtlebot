@@ -68,7 +68,7 @@ You can also change this to output to MQTT topics via the command:
 
 ```bash
 cd docker/
-docker compose run --rm trustworthiness-checker /mnt/host_models/maple_seq.lola --input-mqtt-topics stage --output-stdout
+docker compose run --rm trustworthiness-checker /mnt/host_models/maple_seq.lola --input-mqtt-topics stage --output-mqtt-topics m a p l e maple
 ```
 
 ## Devcontainer Variants
