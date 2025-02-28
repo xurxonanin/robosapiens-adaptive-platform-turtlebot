@@ -26,15 +26,17 @@ This must be run after every reboot before launching the containers.
 
 1. **Open the Full DevContainer:**
    You can open the Visual Studio Code devcontainer for the project in order to run the necessary services, and use the development environment for the adaptive loop.
-   To do this, first 
-   Use one of the full devcontainer configurations (e.g., [`.devcontainer/nvidia-full-tb3/devcontainer.json`](.devcontainer/nvidia-full-tb3/devcontainer.json) or [`.devcontainer/mesa-full-tb3/devcontainer.json`](.devcontainer/mesa-full-tb3/devcontainer.json)) in Visual Studio Code.  
-   Use the **"Rebuild and Reopen in Container"** command to make sure the devcontainer is launched.
+   To do this, first open the folder for the repository in Visual Studio Code.
+   It should prompt you to **"Reopen in Container"** or alternatively, you can open the dev container by pressing Ctrl+Shift+P and selecting **"Rebuild and Reopen in Container"**.
+   You should select one of the full devcontainer configurations which matches your hardware (e.g., [`.devcontainer/nvidia-full-tb3/devcontainer.json`](.devcontainer/nvidia-full-tb3/devcontainer.json) or [`.devcontainer/mesa-full-tb3/devcontainer.json`](.devcontainer/mesa-full-tb3/devcontainer.json)) in Visual Studio Code (see **Devcontainer Variants**).
 
 3. **Services in the Container:**  
    The devcontainer setup automatically starts all the necessary services for:
    - Simulation (Gazebo)
    - ROS integration
    - MQTT communication
+  
+   But you will need to launch the self-adaptive loop and trustworthiness checker yourself (see below).
 
 ### Running the Self-Adaptive Loop
 
