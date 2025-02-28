@@ -94,6 +94,10 @@ Tailored for running TB3 (TurtleBot 3) simulations with MESA graphics. Features 
 
 Provides a complete Gazebo simulation environment for TurtleBot 4 for machines without GPU acceleration. It ensures that users without any graphics hardware can still run the full self-adaptive system, but may be painfully slow.
 
+### RoboSapiens Adaptive Platform -- Full TB3 Gazebo (No GPU):
+
+Tailored for running TB3 (TurtleBot 3) simulations with no GPU acceleration. Features similar configurations as the TB4 variant but adapted for TB3 simulation parameters.
+
 ### Non-full variants
 
 These variants just run the main devcontainer without any dependencies. They are useful when separately developing new versions of these dependencies, or for running Gazebo locally.
