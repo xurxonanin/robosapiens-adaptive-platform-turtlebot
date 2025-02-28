@@ -8,10 +8,12 @@ This project has its own devcontainer so you can work on it in isolation. Inside
 
 - **Build** the bridge with:
   ```bash
-  cargo build```
+  cargo build
+  ```
 - Run the tests with:
   ```bash
-  cargo test```
+  cargo test
+  ```
 
 ## Docker Compose Integration
 
