@@ -59,7 +59,7 @@ This repository includes several devcontainer variants to support different hard
 
 ### RoboSapiens Adaptive Platform -- Full TB4 Gazebo (NVIDIA GPU):
 
-Provides a full development environment for running the TurtleBot 4 simulation using Gazebo on systems with NVIDIA GPUs. It automatically builds and starts all necessary services and installs the required dependencies after container start-up.
+Provides a full development environment for running the TurtleBot 4 simulation using Gazebo on systems with NVIDIA GPUs. It automatically builds and starts all necessary services and installs the required dependencies after container start-up. You must have [Nvidia container toolkit](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/install-guide.html) installed to use this option.
 
 ### RoboSapiens Adaptive Platform -- Full TB3 Gazebo (NVIDIA GPU):
 
