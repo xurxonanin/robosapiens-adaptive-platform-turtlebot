@@ -96,7 +96,7 @@ Provides a complete Gazebo simulation environment for TurtleBot 4 for machines w
 
 ### Non-full variants
 
-These variants just run the main devcontainer without any dependencicies. They are useful when separately developing new versions of these dependencies, or for running Gazebo locally.
+These variants just run the main devcontainer without any dependencies. They are useful when separately developing new versions of these dependencies, or for running Gazebo locally.
 
 ## Devcontainer command line
 
