@@ -102,6 +102,7 @@ services:
     network_mode: host
     volumes:
       - ../trustworthiness-specs:/mnt/host_models
+      - /dev/shm:/dev/shm # It can use unique shared memory. Necessary for ROS channels to use to transfer data on the same machine.
   trustworthiness-checker-maple-seq:
     extends: trustworthiness-checker
     command: /mnt/host_models/maple_seq.lola --input-mqtt-topics stage --output-mqtt-topics m a p l e maple
