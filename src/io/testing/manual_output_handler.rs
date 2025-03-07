@@ -3,8 +3,8 @@ use std::{collections::BTreeMap, future::Future, mem, pin::Pin};
 use async_trait::async_trait;
 use futures::future::join_all;
 use tokio::sync::{mpsc, oneshot};
-use tokio_stream::{wrappers::ReceiverStream, StreamExt};
-use tracing::{debug, info, instrument, Level};
+use tokio_stream::{StreamExt, wrappers::ReceiverStream};
+use tracing::{Level, debug, info, instrument};
 
 use crate::core::{OutputHandler, OutputStream, StreamData, VarName};
 
@@ -101,6 +101,10 @@ impl<V: StreamData> OutputHandler<V> for ManualOutputHandler<V> {
                     output_sender.send(output).await.unwrap();
                 } else {
                     // One of the streams has ended, so we should stop
+                    info!(
+                        "Stopping ManualOutputHandler with len(nexts) = {}",
+                        streams.len()
+                    );
                     break;
                 }
             }
@@ -193,8 +197,8 @@ mod tests {
 
     use super::*;
     use crate::{OutputStream, Value, VarName};
-    use futures::stream;
     use futures::StreamExt;
+    use futures::stream;
     use test_log::test;
 
     // Ordering of Value - only available for testing
